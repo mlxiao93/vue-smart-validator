@@ -1,0 +1,27 @@
+{
+  "name": "vue-smart-validator",
+  "version": "0.1.0",
+  "description": "Smart Vue.js validation plugin",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mlxiao93/vue-smart-validator.git"
+  },
+  "keywords": [
+    "Vue",
+    "VueJs",
+    "validate",
+    "validator",
+    "validation",
+    "form"
+  ],
+  "author": "maolin xiao <xml_hn@163.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mlxiao93/vue-smart-validator/issues"
+  },
+  "homepage": "https://github.com/mlxiao93/vue-smart-validator#readme"
+}
