@@ -1,0 +1,11 @@
+{
+    "spec_dir": "test/unit/specs",
+    "spec_files": [
+        "**/*[sS]pec.[jt]s"
+    ],
+    "helpers": [
+        "../../../node_modules/ts-node/register.js"
+    ],
+    "stopSpecOnExpectationFailure": false,
+    "random": false
+}

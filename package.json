@@ -2,9 +2,13 @@
   "name": "vue-smart-validator",
   "version": "0.1.0",
   "description": "Smart Vue.js validation plugin",
-  "main": "index.js",
+  "main": "dist/validator.common.js",
+  "module": "dist/validator.esm.js",
+  "unpkg": "dist/validator.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example": "webpack-dev-server --progress --hot --config example/webpack.config.babel.js",
+    "test:unit": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
+    "build": "rollup --config build/rollup.config.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +27,34 @@
   "bugs": {
     "url": "https://github.com/mlxiao93/vue-smart-validator/issues"
   },
-  "homepage": "https://github.com/mlxiao93/vue-smart-validator#readme"
+  "homepage": "https://github.com/mlxiao93/vue-smart-validator#readme",
+  "devDependencies": {
+    "@types/jasmine": "2.6.0",
+    "@types/node": "^8.0.47",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-external-helpers": "^6.22.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-decorators": "^6.24.1",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.7",
+    "html-webpack-plugin": "^2.30.1",
+    "jasmine": "2.8.0",
+    "open-browser-webpack-plugin": "^0.0.5",
+    "rollup": "^0.50.0",
+    "rollup-plugin-typescript": "^0.8.1",
+    "ts-loader": "^3.0.5",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.5.3",
+    "vue": "^2.5.2",
+    "vue-loader": "^13.3.0",
+    "vue-template-compiler": "^2.5.2",
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {}
 }
