@@ -1,3 +1,7 @@
+/**
+ * 校验规则
+ */
+
 import { isEmpty } from './util/data';
 
 export default {
