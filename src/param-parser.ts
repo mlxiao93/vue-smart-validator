@@ -53,15 +53,16 @@ export class DirectiveParamParser {
 
             if (typeof rule === 'string') {
                 let ruleSplits = rule.split('.');
-                _rule.key = ruleSplits[0];
-                if (ruleSplits.length > 1) {
-                    let modifiesSplits = ruleSplits.splice(1);
-                    modifiesSplits.map(item => {
+                _rule.key = ruleSplits[0].split(/\s*:\s*/)[0];
+                if (ruleSplits.length <= 1) {
+                    _rule.modifies = ruleSplits[0].split(/\s*:\s*/)[1];
+                } else {
+                    ruleSplits.map(item => {
                         let itemSplits = item.split(/\s*:\s*/);
                         _rule.modifies[itemSplits[0]] = itemSplits[1] === undefined ? true : itemSplits[1]
                     });
                 }
-            } else if (toString.call(rule) === '[object object]') {
+            } else if (toString.call(rule) === '[object Object]') {
                 _rule.key = Object.keys(rule)[0];
                 _rule.modifies = rule[_rule.key];
             } else {
