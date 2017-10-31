@@ -1,13 +1,25 @@
 import scopedEval from './util/scoped-eval'
 
+export type options = {
+    group?: string,
+    trigger?: string
+}
+
+export type rules = Array<{
+    key: string,
+    modifies?: object|string|number,
+    message?: object,
+    trigger?: string
+}>;
+
 export class DirectiveParamParser {
     static modifiersSplitter = '@';
 
     private expressionObj;
     private modifiersObj;
 
-    rules;
-    options;
+    rules: rules;
+    options: options;
 
 
     private setExpressionObj ({ expression, context }) {
@@ -38,12 +50,12 @@ export class DirectiveParamParser {
         } else {
             rules = expressionObj.rules;
         }
-        this.rules = rules;
+
+        this.rules = this.formatRules(rules);
     }
 
-    private formatRules() {
-        let { rules } = this;
-        this.rules = rules.map(({ rule, message, trigger}) => {
+    private formatRules(rules) {
+        return rules.map(({ rule, message, trigger}) => {
             let _rule = {
                 key: '',
                 modifies: {},
@@ -94,7 +106,6 @@ export class DirectiveParamParser {
         this.setModifiersObj( { modifiers } );
 
         this.setRules();
-        this.formatRules();
         this.setOptions();
     }
 }

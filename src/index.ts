@@ -1,12 +1,11 @@
-import { inBrowser } from './util/dom'
 import validatorDirective from './validator.directive'
+import {Rule} from "./rule";
 
 export default class Validator {
-    static install (Vue) {
+    install = function (Vue) {
         Vue.directive('validator', validatorDirective)
+    };
+    constructor({ rules, defaultTrigger }:{rules?: Object, defaultTrigger?: string} = {}) {
+        Rule.extendRules(rules);
     }
-}
-
-if (inBrowser && (<any>window).Vue) {
-    (<any>window).Vue.use(Validator)
 }

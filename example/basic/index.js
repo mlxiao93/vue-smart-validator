@@ -2,7 +2,9 @@ import Vue from 'vue'
 import app from './app.vue'
 import Validator from '../../src/index'
 
-Vue.use(Validator);
+Vue.use(new Validator({ rule: {
+    foo: /foo/
+} }));
 
 new Vue({
     el: '#app',
