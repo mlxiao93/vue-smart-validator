@@ -1,10 +1,13 @@
-import typescript from 'rollup-plugin-typescript';
+import rollupPluginTypescript from 'rollup-plugin-typescript';
+import typescript from 'typescript'
 import path from 'path'
 
 export default {
     input: path.resolve(__dirname, '../src/index.ts'),
     plugins: [
-        typescript()
+        rollupPluginTypescript({
+            typescript
+        })
     ],
     output: [
         {

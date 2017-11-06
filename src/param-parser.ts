@@ -6,7 +6,7 @@ export type options = {
 }
 
 export type rules = Array<{
-    key: string,
+    key: string|object|Function,
     modifies?: object|string|number,
     message?: object,
     trigger?: string
@@ -15,22 +15,16 @@ export type rules = Array<{
 export class DirectiveParamParser {
     static modifiersSplitter = '@';
 
-    private expressionObj;
+    private directiveValue;
     private modifiersObj;
 
     rules: rules;
     options: options;
+    vModelKey: string;
 
 
-    private setExpressionObj ({ expression, context }) {
-        let expressionObj = {};
-        try {
-            expressionObj = scopedEval(expression, context);
-        } catch (e) {
-            console.error('smart validator: invalid expression');
-            expressionObj = {};
-        }
-        this.expressionObj = expressionObj;
+    private setDirectiveValue ({ value }) {
+        this.directiveValue = value || {};
     }
 
     private setModifiersObj({ modifiers }) {
@@ -43,12 +37,14 @@ export class DirectiveParamParser {
     }
 
     private setRules() {
-        let { expressionObj } = this;
+        let { directiveValue } = this;
         let rules;
-        if (Array.isArray(<any>expressionObj)) {
-            rules = expressionObj;
+        if (Array.isArray(<any>directiveValue)) {
+            rules = directiveValue;
+        } else if (Array.isArray(directiveValue.rules)) {
+            rules = directiveValue.rules;
         } else {
-            rules = expressionObj.rules;
+            rules = [directiveValue];
         }
 
         this.rules = this.formatRules(rules);
@@ -81,28 +77,31 @@ export class DirectiveParamParser {
                 _rule.key = rule;
             }
 
-            if (typeof message === 'string') {
-                _rule.message = {'default': message}
-            } else {
-                _rule.message = message
-            }
+            _rule.message = message;
 
             return _rule;
         })
     }
 
     private setOptions() {
-        let { expressionObj, modifiersObj, rules } = this;
+        let { directiveValue, modifiersObj, rules } = this;
         let options = modifiersObj;
         options.rules = rules;
-        if (!Array.isArray(<any>expressionObj)) {
-            options = {...options, ...expressionObj};
+        if (!Array.isArray(<any>directiveValue)) {
+            options = {...options, ...directiveValue};
         }
         this.options = options;
     }
 
-    constructor({ modifiers, expression, context }) {
-        this.setExpressionObj({ expression,  context});
+    private setVModelKey(directives: Array<any>) {
+        let vModel = directives.filter(item => item.name === 'model')[0];
+        if (!vModel) throw 'smart validator: v-model not found';
+        this.vModelKey = vModel.expression
+    }
+
+    constructor({ modifiers, value, directives }) {
+        this.setVModelKey(directives);
+        this.setDirectiveValue({ value });
         this.setModifiersObj( { modifiers } );
 
         this.setRules();

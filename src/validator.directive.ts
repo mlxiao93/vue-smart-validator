@@ -1,18 +1,28 @@
-import { DirectiveParamParser } from './param-parser'
-import { Rule } from "./rule";
-import { Validator } from "./validator";
+import {DirectiveParamParser} from './param-parser'
+import {Validator} from "./validator";
+import Validators from "./validators";
+import scopedEval from './util/scoped-eval'
+import {isEmpty} from "./util/data";
 
 export default {
-    bind (el, { arg, modifiers, expression }, { context }, oldVnode) {
-        let paramParser = new DirectiveParamParser({ modifiers, expression, context });
-        let validator = new Validator({ rules: paramParser.rules, options: paramParser.options });
-        el.addEventListener('blur', () => {
-            let message = Rule.rules.required({value: el.value});
-            if (message) {
-                console.error(message)
-            } else {
-                console.log('OK');
-            }
-        })
+    bind(el, { value, modifiers, expression }, { context, data }, oldVnode) {
+        let paramParser = new DirectiveParamParser({modifiers, value, directives: data.directives});
+        let validator = new Validator({context, rules: paramParser.rules, options: paramParser.options, vModelKey: paramParser.vModelKey});
+        let $validator = Validators.getInstance(context._uid);
+        $validator.setContext(context);
+        $validator.addValidator({validator, options: paramParser.options, vModelKey: paramParser.vModelKey});
+        context.$validator = $validator;
+        console.log(context);
+        let triggers = validator.getExistsTriggers();
+        // triggers.map(trigger => {
+        //     el.addEventListener(trigger, () => {
+        //         let error = validator.check({modelValue: scopedEval(paramParser.vModelKey, context), trigger}).getError();
+        //         if (isEmpty(error)) {
+        //             console.log('OK');
+        //         } else {
+        //             console.error(error);
+        //         }
+        //     });
+        // });
     }
 }
