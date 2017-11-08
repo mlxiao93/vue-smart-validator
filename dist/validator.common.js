@@ -197,7 +197,7 @@ var Validator = /** @class */ (function () {
             var rule = Rule.getRule(key);
             if (!rule)
                 return console.error("smart validator: rule '" + key + "' do not exists");
-            var _trigger = trigger || options.trigger || Validator.defaultTrigger;
+            var _trigger = trigger || options.trigger || Validator.trigger;
             validators.push({
                 key: typeof key === 'string' ? key : undefined,
                 check: function (modelValue) {
@@ -237,7 +237,7 @@ var Validator = /** @class */ (function () {
         })[0];
         return _validator && _validator.errorMessage || undefined;
     };
-    Validator.defaultTrigger = 'blur';
+    Validator.trigger = 'blur';
     return Validator;
 }());
 
@@ -297,10 +297,10 @@ var validatorDirective = {
 
 var Index = /** @class */ (function () {
     function Index(_a) {
-        var _b = _a === void 0 ? {} : _a, rules = _b.rules, defaultTrigger = _b.defaultTrigger;
+        var _b = _a === void 0 ? {} : _a, rules = _b.rules, trigger = _b.trigger;
         Rule.extendRules(rules);
-        if (defaultTrigger)
-            Validator.defaultTrigger = defaultTrigger;
+        if (trigger)
+            Validator.trigger = trigger;
     }
     Index.prototype.install = function (Vue) {
         Vue.directive('validator', validatorDirective);

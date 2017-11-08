@@ -91,7 +91,11 @@
             }
         },
         created () {
-
+            this.$validator.options({
+                rules: {
+                    bar: /bar/
+                }
+            })
         }
     }
 </script>

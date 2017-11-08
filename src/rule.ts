@@ -1,35 +1,14 @@
-/**
- * 校验规则
- */
-
-import { isEmpty } from './util/data';
+import Options from "./options";
 
 export class Rule {
-    static rules = {
-        required (value, message = 'can not be empty') {
-            if (isEmpty(value)) {
-                return message;
-            }
-        },
-        number (value, message = 'must be numbers') {
-            if (!/^\d*$/.test(value)) {
-                return message;
-            }
-        }
-    };
-
-    static extendRules(rules = {}) {
-        Rule.rules = {...Rule.rules, ...rules};
-    }
     static getRule(key) {
+        let rules = Options.getInstance().getOptions().rules
         switch (toString.call(key)) {
             case '[object String]':
-                return Rule.rules[key];
+                return rules[key];
             case '[object RegExp]':
-                return function (value, message) {
-                    if (!key.test(value)) {
-                        return message;
-                    }
+                return function (value) {
+                    return key.test(value);
                 };
             case '[object Function]':
                 return key;

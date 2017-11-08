@@ -1,5 +1,3 @@
-import scopedEval from './util/scoped-eval'
-
 export type options = {
     group?: string,
     trigger?: string

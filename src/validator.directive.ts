@@ -1,8 +1,6 @@
 import {DirectiveParamParser} from './param-parser'
 import {Validator} from "./validator";
 import Validators from "./validators";
-import scopedEval from './util/scoped-eval'
-import {isEmpty} from "./util/data";
 
 export default {
     bind(el, { value, modifiers, expression }, { context, data }, oldVnode) {
@@ -12,7 +10,6 @@ export default {
         $validator.setContext(context);
         $validator.addValidator({validator, options: paramParser.options, vModelKey: paramParser.vModelKey});
         context.$validator = $validator;
-        console.log(context);
         let triggers = validator.getExistsTriggers();
         // triggers.map(trigger => {
         //     el.addEventListener(trigger, () => {

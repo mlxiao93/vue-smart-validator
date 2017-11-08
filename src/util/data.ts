@@ -15,3 +15,7 @@ export function isEmpty(val: any): boolean {
     if (JSON.stringify(val) === '{}') return true;
     return false;
 }
+
+export function isNullOrUndefined(val) {
+    return val === null || val === undefined;
+}

@@ -1,8 +1,8 @@
 import { rules, options } from './param-parser'
 import { Rule } from "./rule";
+import Options from "./options";
 
 export class Validator {
-    static defaultTrigger = 'blur';
 
     vModelKey;
 
@@ -21,13 +21,15 @@ export class Validator {
         rules.map(({ key, modifies, message, trigger }, index) => {
             let rule = Rule.getRule(key);
             if (!rule) return console.error(`smart validator: rule '${key}' do not exists`);
-            let _trigger = trigger || options.trigger || Validator.defaultTrigger;
+            let _trigger = trigger || options.trigger || Options.getInstance().getOptions().trigger;
             validators.push({
                 index,
                 key: typeof key === 'string' ? key : undefined,
-                check: modelValue => {
-                    return rule.call(this, modelValue, message, modifies);
-                },
+                check: (message => {
+                    return modelValue => {
+                        if (!rule(modelValue, modifies)) return message;
+                    }
+                })(message),
                 trigger: _trigger
             })
         })

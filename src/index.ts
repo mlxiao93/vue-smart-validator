@@ -1,19 +1,22 @@
 import validatorDirective from './validator.directive'
-import {Rule} from "./rule";
-import {Validator} from "./validator";
 import Validators from "./validators";
+import Options from './options'
 
 export default class Index {
     install(Vue) {
         Vue.mixin({
             beforeCreate() {
                 this.$validator = Validators.getInstance('default');
+                this.$validator.options = function (opts) {
+                    let options = Options.getInstance();
+                    options.setLocal(opts);
+                }
             }
         });
         Vue.directive('validator', validatorDirective)
     };
-    constructor({ rules, defaultTrigger }:{rules?: Object, defaultTrigger?: string} = {}) {
-        Rule.extendRules(rules);
-        if (defaultTrigger) Validator.defaultTrigger = defaultTrigger;
+    constructor(opts) {
+        let options = Options.getInstance();
+        options.setGlobal(opts);
     };
 }
