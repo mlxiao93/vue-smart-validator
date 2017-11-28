@@ -5,10 +5,10 @@
                <!--v-validator="[{rule: 'required', message: '必填'}]"-->
         <!--&gt;-->
 
-        <input type="text"
-               v-model="a"
-               v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"
-        >
+        <!--<input type="text"-->
+               <!--v-model="a"-->
+               <!--v-validator.trigger@blur="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"-->
+        <!--&gt;-->
 
         <!--<span v-if="$validator && $validator.getError('a')[0]">{{$validator.getError('a')[0]}}</span>-->
         <!--{{$validator && $validator}}-->
@@ -17,10 +17,16 @@
         <br>
 
         <!--<el-input v-model="a"-->
-                  <!--v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]">-->
+                  <!--v-validator.trigger@blur="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]">-->
 
         <!--</el-input>-->
+
+        <br>
+        <my-input v-model="a"
+                  v-validator.trigger@blur="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"></my-input>
+
         {{$validator.firstError('a')}}
+
 
         <!--<input type="text"-->
                <!--v-model="b"-->
@@ -74,7 +80,11 @@
     </div>
 </template>
 <script>
+    import MyInput from './MyInput.vue'
     export default {
+        components: {
+            MyInput
+        },
         data () {
             return {
                 foo: [1],

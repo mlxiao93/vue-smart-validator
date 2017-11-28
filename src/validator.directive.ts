@@ -4,8 +4,14 @@ import Validators from "./validators";
 import ErrorTrigger from  './error-trigger'
 
 export default {
-    bind(el, { value, modifiers, expression }, { context, data }) {
-        let paramParser = new DirectiveParamParser({modifiers, value, directives: data.directives});
+    bind(el, { value, modifiers, expression }, vnode) {
+        let {context, data} = vnode;
+
+        // context.$children[0].$on('input', () => {
+        //     console.log('haha');
+        // });
+
+        let paramParser = new DirectiveParamParser({modifiers, value, data});
         let validator = new Validator({
             targetEl: el,
             errorEl: el,
@@ -24,9 +30,9 @@ export default {
         el.errorTrigger.register();
     },
     update(el, bindings, vnode, oldVnode) {
-        let oldModalVal = oldVnode.data.directives.filter(item => item.name === 'model')[0].value;
-        let newModalVal = vnode.data.directives.filter(item => item.name === 'model')[0].value;
-        if (oldModalVal !== newModalVal) {
+        let oldModal = oldVnode.data.model || oldVnode.data.directives.filter(item => item.name === 'model')[0];
+        let newModal = vnode.data.model || vnode.data.directives.filter(item => item.name === 'model')[0];
+        if (oldModal.value !== newModal.value) {
             el.errorTrigger.triggerChange();
         }
 

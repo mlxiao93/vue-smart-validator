@@ -91,14 +91,20 @@ export class DirectiveParamParser {
         this.options = options;
     }
 
-    private setVModelKey(directives: Array<any>) {
-        let vModel = directives.filter(item => item.name === 'model')[0];
+    private setVModelKey(data) {
+        let vModel;
+        if (data.model) {
+            vModel = data.model;
+        } else {
+            vModel = data.directives.filter(item => item.name === 'model')[0];
+        }
+
         if (!vModel) throw 'smart validator: v-model not found';
         this.vModelKey = vModel.expression
     }
 
-    constructor({ modifiers, value, directives }) {
-        this.setVModelKey(directives);
+    constructor({ modifiers, value, data }) {
+        this.setVModelKey(data);
         this.setDirectiveValue({ value });
         this.setModifiersObj( { modifiers } );
 

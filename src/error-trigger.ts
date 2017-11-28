@@ -1,6 +1,7 @@
 import {Validator} from './validator'
 import {isEmpty} from "./util/data";
 import scopedEval from './util/scoped-eval'
+import { isEditableFormEl, onlyOneEditableFormElChild } from './util/dom'
 
 export default class ErrorTrigger {
     validator: Validator;
@@ -11,26 +12,48 @@ export default class ErrorTrigger {
 
     checkTrigger() {
         let validator = this.validator;
+        let context = validator.context;
         let targetEl = validator.targetEl;
         let triggers = validator.getExistsTriggers();
-        for (let trigger of triggers) {
-            if (trigger !== 'change' && !(`on${triggers}` in targetEl)) {
-                console.error(`smart validator: can not register event 'on${triggers}' on element :`)
-                console.log(targetEl)
-            }
+
+        if (isEditableFormEl(targetEl)) {
+            triggers.map(trigger => {
+                if (trigger !== 'change' && !(`on${trigger}` in targetEl)) {
+                    console.error(`smart validator: can not register event 'on${trigger}' on element :`);
+                    console.log(targetEl)
+                }
+            })
         }
     }
 
     register() {
         let validator = this.validator;
+        let context = validator.context;
         let triggers = validator.getExistsTriggers();
         let targetEl = validator.targetEl;
 
-        triggers.map(trigger => {
-            targetEl.addEventListener(trigger, () => {
-                validator.check({trigger})
+        if (isEditableFormEl(targetEl)) {
+            triggers.map(trigger => {
+                targetEl.addEventListener(trigger, () => {
+                    validator.check({trigger})
+                });
             });
-        });
+        } else {
+            let vueInstance = context.$children[0];
+            triggers.map(trigger => {
+                vueInstance.$on(trigger, () => {
+                    validator.check({trigger})
+                });
+            });
+            if (onlyOneEditableFormElChild(targetEl)) {
+                triggers.map(trigger => {
+                    targetEl.querySelector('input, select, textarea').addEventListener(trigger, () => {
+                        validator.check({trigger})
+                    });
+                });
+            }
+        }
+
     }
 
     triggerChange() {
