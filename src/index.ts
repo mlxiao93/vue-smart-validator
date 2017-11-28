@@ -1,5 +1,5 @@
 import validatorDirective from './validator.directive'
-import Validators from "./validators";
+import Validators from "./validators"
 import Options from './options'
 
 export default class Index {

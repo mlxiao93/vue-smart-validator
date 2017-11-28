@@ -8,7 +8,7 @@ export default class Options {
     }
 
     private defaults = {
-        trigger: 'blur',
+        trigger: 'change',
         rules: {
             required (value) {
                 return !isEmpty(value);
@@ -16,7 +16,8 @@ export default class Options {
             number (value) {
                 return /^\d*$/.test(value);
             }
-        }
+        },
+        autoError: false
     };
 
     private global:any = {};

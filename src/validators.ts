@@ -29,15 +29,14 @@ export default class Validators {
     }
 
     check(index?: string|{ group: string }) {
-        let { validators, context } = this;
+        let { validators } = this;
         validators.map(({ key, group, validator }) => {
-            let modelValue = scopedEval(validator.vModelKey, context);
             if (index === undefined) {
-                validator.check({ modelValue });
+                validator.check({ });
             } else if (typeof index === 'string') {
-                if (index === key) validator.check({ modelValue });
+                if (index === key) validator.check({ });
             } else {
-                if (index.group === group) validator.check({ modelValue });
+                if (index.group === group) validator.check({ });
             }
         });
         return this;

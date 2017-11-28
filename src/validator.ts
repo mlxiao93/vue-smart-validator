@@ -1,10 +1,14 @@
 import { rules, options } from './param-parser'
 import { Rule } from "./rule";
 import Options from "./options";
+import {isEmpty} from "./util/data";
+import scopedEval from './util/scoped-eval'
 
 export class Validator {
 
     vModelKey;
+    errorEl: HTMLElement;
+    targetEl: HTMLElement;
 
     private validators: Array<{
         index: number,
@@ -14,10 +18,10 @@ export class Validator {
         errorMessage?: string
     }> = [];
 
-    private context: any;
+    context: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
-        let { validators } = this;
+        let { validators, errorEl } = this;
         rules.map(({ key, modifies, message, trigger }, index) => {
             let rule = Rule.getRule(key);
             if (!rule) return console.error(`smart validator: rule '${key}' do not exists`);
@@ -41,14 +45,23 @@ export class Validator {
         return Object.keys(triggerObj);
     }
 
-    check({ modelValue, trigger }: { modelValue: any, trigger?: string }) {
-        let { validators, context } = this;
+    check({ trigger }: { trigger?: string }) {
+        let { validators, context, errorEl, vModelKey } = this;
+        let modelValue = scopedEval(vModelKey, context);
         for (let validator of validators) {
             if (trigger) {
                 (validator.trigger === trigger) && (validator.errorMessage = validator.check(modelValue));
             } else {
                 validator.errorMessage = validator.check(modelValue);
             }
+        }
+        let message = this.firstError();
+        if (message) {
+            errorEl.classList.add('validator-has-error');
+            errorEl.setAttribute('data-validator-error', message);
+        } else {
+            errorEl.classList.remove('validator-has-error');
+            errorEl.removeAttribute('data-validator-error');
         }
         context.$forceUpdate();
         return this;
@@ -65,7 +78,16 @@ export class Validator {
         return error;
     }
 
-    constructor({ rules, options, vModelKey, context }: { rules: rules, options: options, vModelKey: string, context: object }) {
+    firstError() {
+        let error = this.getError();
+        if (isEmpty(error)) return;
+        let key = Object.keys(error).filter(item => typeof +item === 'number').sort()[0];
+        return error[key];
+    }
+
+    constructor({ rules, options, vModelKey, context, errorEl, targetEl }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement }) {
+        this.targetEl = targetEl;
+        this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
         this.setValidators({ rules, options })

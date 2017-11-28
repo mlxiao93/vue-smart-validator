@@ -7,13 +7,20 @@
 
         <input type="text"
                v-model="a"
-               v-validator.group@a.trigger@input="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"
+               v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"
         >
 
-        {{$validator.firstError('a')}}
         <!--<span v-if="$validator && $validator.getError('a')[0]">{{$validator.getError('a')[0]}}</span>-->
         <!--{{$validator && $validator}}-->
         <!--<br>-->
+
+        <br>
+
+        <!--<el-input v-model="a"-->
+                  <!--v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]">-->
+
+        <!--</el-input>-->
+        {{$validator.firstError('a')}}
 
         <!--<input type="text"-->
                <!--v-model="b"-->
@@ -86,7 +93,7 @@
         methods: {
             submit() {
                 let { $validator } = this;
-                $validator.check({group: 'a'});
+                $validator.check();
                 console.log($validator.getError('a'));
             }
         },
