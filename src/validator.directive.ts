@@ -2,15 +2,11 @@ import {DirectiveParamParser} from './param-parser'
 import {Validator} from "./validator";
 import Validators from "./validators";
 import ErrorTrigger from  './error-trigger'
+import Options from './options'
 
 export default {
     bind(el, { value, modifiers, expression }, vnode) {
         let {context, data} = vnode;
-
-        // context.$children[0].$on('input', () => {
-        //     console.log('haha');
-        // });
-
         let paramParser = new DirectiveParamParser({modifiers, value, data});
         let validator = new Validator({
             targetEl: el,

@@ -36,13 +36,13 @@ export class DirectiveParamParser {
 
     private setRules() {
         let { directiveValue } = this;
-        let rules;
-        if (Array.isArray(<any>directiveValue)) {
+        let rules;   // [{rule: 'required', message: ''}]
+        if (Array.isArray(<any>directiveValue)) {   // [{rule: 'required', message: ''}]
             rules = directiveValue;
-        } else if (Array.isArray(directiveValue.rules)) {
+        } else if (Array.isArray(directiveValue.rules)) {   // {rules: [{rule: 'required', message: ''}], group: ''}
             rules = directiveValue.rules;
         } else {
-            rules = [directiveValue];
+            rules = [directiveValue];     // {rule: 'required', message: ''}
         }
 
         this.rules = this.formatRules(rules);
@@ -75,7 +75,7 @@ export class DirectiveParamParser {
                 _rule.key = rule;
             }
 
-            _rule.message = message;
+            _rule.message = message;    // TODO merge error message
 
             return _rule;
         })

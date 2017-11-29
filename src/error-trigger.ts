@@ -1,6 +1,4 @@
 import {Validator} from './validator'
-import {isEmpty} from "./util/data";
-import scopedEval from './util/scoped-eval'
 import { isEditableFormEl, onlyOneEditableFormElChild } from './util/dom'
 
 export default class ErrorTrigger {
@@ -12,7 +10,6 @@ export default class ErrorTrigger {
 
     checkTrigger() {
         let validator = this.validator;
-        let context = validator.context;
         let targetEl = validator.targetEl;
         let triggers = validator.getExistsTriggers();
 

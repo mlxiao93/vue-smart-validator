@@ -3,12 +3,14 @@ import { Rule } from "./rule";
 import Options from "./options";
 import {isEmpty} from "./util/data";
 import scopedEval from './util/scoped-eval'
+import {appendErrorEl, insertAfter, removeErrorEl} from "./util/dom";
 
 export class Validator {
 
     vModelKey;
     errorEl: HTMLElement;
     targetEl: HTMLElement;
+    options;
 
     private validators: Array<{
         index: number,
@@ -56,12 +58,21 @@ export class Validator {
             }
         }
         let message = this.firstError();
+
+        let options = Options.getInstance().getOptions(this.options);
+
         if (message) {
             errorEl.classList.add('validator-has-error');
             errorEl.setAttribute('data-validator-error', message);
+
+            if (options.appendErrorTip) {
+                appendErrorEl(errorEl, message);
+            }
+
         } else {
             errorEl.classList.remove('validator-has-error');
             errorEl.removeAttribute('data-validator-error');
+            removeErrorEl(errorEl);
         }
         context.$forceUpdate();
         return this;
@@ -90,6 +101,7 @@ export class Validator {
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
+        this.options = options;
         this.setValidators({ rules, options })
     }
 }

@@ -23,9 +23,8 @@
 
         <br>
         <my-input v-model="a"
-                  v-validator.trigger@blur="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"></my-input>
+                  v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"></my-input>
 
-        {{$validator.firstError('a')}}
 
 
         <!--<input type="text"-->
@@ -68,10 +67,10 @@
                <!--v-validator.group@a.foo.bar@10="[{rule: verify, message: '格式错误', trigger: 'blur'}]"-->
         <!--&gt;-->
 
-        <!--<input type="text"-->
-               <!--v-model="foo"-->
-               <!--v-validator.foo@1="{rules: [{rule: verify, message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
-        <!--&gt;-->
+        <input type="text"
+               v-model="b"
+               v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"
+        >
 
         <div>
             <button @click="submit">submit</button>
@@ -111,7 +110,8 @@
             this.$validator.options({
                 rules: {
                     bar: /bar/
-                }
+                },
+                appendErrorTip: true
             })
         }
     }

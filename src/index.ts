@@ -7,9 +7,14 @@ export default class Index {
         Vue.mixin({
             beforeCreate() {
                 this.$validator = Validators.getInstance('default');
-                this.$validator.options = function (opts) {
-                    let options = Options.getInstance();
-                    options.setLocal(opts);
+                this.$validator.options = (opts) => {
+                    Options.getInstance().setLocal(opts);
+                    this.$validatorLocalOptionsHasSet = true;
+                }
+            },
+            destroyed () {
+                if (this.$validatorLocalOptionsHasSet) {
+                    Options.getInstance().resetLocal();
                 }
             }
         });

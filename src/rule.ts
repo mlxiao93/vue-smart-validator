@@ -2,7 +2,7 @@ import Options from "./options";
 
 export class Rule {
     static getRule(key) {
-        let rules = Options.getInstance().getOptions().rules
+        let rules = Options.getInstance().getOptions().rules;
         switch (toString.call(key)) {
             case '[object String]':
                 return rules[key];

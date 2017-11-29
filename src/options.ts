@@ -17,7 +17,7 @@ export default class Options {
                 return /^\d*$/.test(value);
             }
         },
-        autoError: false
+        appendErrorTip: false
     };
 
     private global:any = {};
@@ -31,7 +31,11 @@ export default class Options {
         this.local = option;
     }
 
-    public getOptions():any {
+    public resetLocal() {
+        this.local = isEmpty(this.global) ? this.defaults : this.global;
+    }
+
+    public getOptions(directiveOptions?:any):any {
         let { defaults, global, local } = this;
         let options = {};
         Object.keys(defaults).map(key => {
@@ -52,11 +56,22 @@ export default class Options {
                     ...(localVal || {})
                 ];
             } else {
-                options[key] = (!isNullOrUndefined(localVal) && localVal) ||
-                    (!isNullOrUndefined(globalVal) && globalVal) ||
-                    (!isNullOrUndefined(defaultVal) && defaultVal);
+                options[key] = defaultVal;
+                if (!isNullOrUndefined(localVal)) {
+                    options[key] = localVal;
+                } else if (!isNullOrUndefined(globalVal)) {
+                    options[key] = globalVal
+                }
+
             }
         });
+
+        if (directiveOptions) {
+            Object.keys(directiveOptions).map(key => {
+                if (key === 'rules') return;
+                options[key] = directiveOptions[key];
+            })
+        }
 
         return options;
     }

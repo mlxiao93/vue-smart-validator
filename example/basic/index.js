@@ -6,9 +6,12 @@ import Validator from '../../src/index'
 
 Vue.use(ElementUI);
 
-Vue.use(new Validator({ rules: {
-    foo: /foo/
-} }));
+Vue.use(new Validator({
+    rules: {
+        foo: /foo/
+    },
+    appendErrorTip: true
+}));
 
 new Vue({
     el: '#app',
