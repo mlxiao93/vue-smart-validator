@@ -1,5 +1,4 @@
 import {Validator} from "./validator";
-import scopedEval from './util/scoped-eval'
 import {isEmpty} from "./util/data";
 
 export default class Validators {

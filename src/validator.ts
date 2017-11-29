@@ -101,6 +101,8 @@ export class Validator {
         return error[key];
     }
 
+
+
     constructor({ rules, options, vModelKey, context, errorEl, targetEl }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement }) {
         this.targetEl = targetEl;
         this.errorEl = errorEl;

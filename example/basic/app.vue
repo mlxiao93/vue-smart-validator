@@ -1,9 +1,11 @@
 <template>
     <div>
-        <!--<input type="text"-->
-               <!--v-model="foo"-->
-               <!--v-validator="[{rule: 'required', message: '必填'}]"-->
-        <!--&gt;-->
+        <input type="text" v-model="a">
+        <br>
+        <input type="text"
+               v-model="b"
+               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'notEqual', value: a, message: `不能等于${a}`}]"
+        >
 
         <!--<input type="text"-->
                <!--v-model="a"-->
@@ -22,18 +24,18 @@
         <!--</el-input>-->
 
         <br>
-        <my-input v-model="a"
-                  v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number'}, {rule: /123/, message: '必须是123'}]"></my-input>
+        <!--<my-input v-model="a"-->
+                  <!--v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number'}, {rule: /123/, message: '必须是123'}]"></my-input>-->
 
 
-        <textarea v-model="c" v-validator="[{rule: 'required', message: '不能为空'}, {rule: 'bar'}, {rule: isHaha}]"></textarea>
+        <!--<textarea v-model="c" v-validator="[{rule: 'required', message: '不能为空'}, {rule: 'bar'}, {rule: isHaha}]"></textarea>-->
 
 
-        <select v-model="d" v-validator="[{rule: 'required', message: '不能为空'}]"> <!--Supplement an id here instead of using 'name'-->
-            <option value="1">Value 1</option>
-            <option value="2">Value 2</option>
-            <option value="3">Value 3</option>
-        </select>
+        <!--<select v-model="d" v-validator="[{rule: 'required', message: '不能为空'}]"> &lt;!&ndash;Supplement an id here instead of using 'name'&ndash;&gt;-->
+            <!--<option value="1">Value 1</option>-->
+            <!--<option value="2">Value 2</option>-->
+            <!--<option value="3">Value 3</option>-->
+        <!--</select>-->
 
         <!--<input type="text"-->
                <!--v-model="b"-->
@@ -75,10 +77,10 @@
                <!--v-validator.group@a.foo.bar@10="[{rule: verify, message: '格式错误', trigger: 'blur'}]"-->
         <!--&gt;-->
 
-        <input type="text"
-               v-model="b"
-               v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"
-        >
+        <!--<input type="text"-->
+               <!--v-model="b"-->
+               <!--v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
+        <!--&gt;-->
 
         <div>
             <button @click="submit">submit</button>

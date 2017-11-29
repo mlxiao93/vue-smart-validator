@@ -13,8 +13,11 @@ export default class Options {
             required (value) {
                 return !isEmpty(value);
             },
-            number (value) {
+            number (value, args) {
                 return /^\d*$/.test(value);
+            },
+            notEqual (value, args) {
+                return value != args.value;
             }
         },
         messages: {

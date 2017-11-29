@@ -49,7 +49,8 @@ export class DirectiveParamParser {
     }
 
     private formatRules(rules) {
-        return rules.map(({ rule, message, trigger}) => {
+        return rules.map((item) => {
+            let { rule, message, trigger } = item;
             let _rule = {
                 key: '',
                 modifies: {},
@@ -75,6 +76,10 @@ export class DirectiveParamParser {
                 _rule.key = rule;
             }
 
+            _rule.modifies = {
+                ..._rule.modifies,
+                ...item
+            };
             _rule.message = message;    // TODO merge error message
 
             return _rule;

@@ -2,10 +2,10 @@ import {DirectiveParamParser} from './param-parser'
 import {Validator} from "./validator";
 import Validators from "./validators";
 import ErrorTrigger from  './error-trigger'
-import Options from './options'
 
 export default {
-    bind(el, { value, modifiers, expression }, vnode) {
+    bind(el, bindings, vnode) {
+        let { value, modifiers, expression } = bindings;
         let {context, data} = vnode;
         let paramParser = new DirectiveParamParser({modifiers, value, data});
         let validator = new Validator({
