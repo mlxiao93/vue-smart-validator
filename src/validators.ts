@@ -1,5 +1,6 @@
 import {Validator} from "./validator";
 import {isEmpty} from "./util/data";
+import {options, rules} from "./param-parser";
 
 export default class Validators {
     static instanceMap = {};
@@ -25,6 +26,12 @@ export default class Validators {
             group: options.group,
             validator
         });
+    }
+
+    refresh({ rules, options }: { rules: rules, options: options}) {
+        this.validators.map(({validator}) => {
+            validator.refresh({ rules, options });
+        })
     }
 
     check(index?: string|{ group: string }) {

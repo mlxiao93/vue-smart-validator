@@ -5,7 +5,7 @@ import ErrorTrigger from  './error-trigger'
 
 export default {
     bind(el, bindings, vnode) {
-        let { value, modifiers, expression } = bindings;
+        let { value, modifiers } = bindings;
         let {context, data} = vnode;
         let paramParser = new DirectiveParamParser({modifiers, value, data});
         let validator = new Validator({
@@ -26,6 +26,15 @@ export default {
         el.errorTrigger.register();
     },
     update(el, bindings, vnode, oldVnode) {
+
+        let { value, modifiers } = bindings;
+        let {data} = vnode;
+        let paramParser = new DirectiveParamParser({modifiers, value, data});
+        vnode.context.$validator.refresh({
+            rules: paramParser.rules,
+            options: paramParser.options
+        });
+
         let oldModal = oldVnode.data.model || oldVnode.data.directives.filter(item => item.name === 'model')[0];
         let newModal = vnode.data.model || vnode.data.directives.filter(item => item.name === 'model')[0];
         if (oldModal.value !== newModal.value) {

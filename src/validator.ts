@@ -23,6 +23,8 @@ export class Validator {
     context: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
+        console.log('here');
+        this.validators = [];
         let { validators, errorEl } = this;
         rules.map(({ key, modifies, message, trigger }, index) => {
             let rule = Rule.getRule(key);
@@ -101,8 +103,6 @@ export class Validator {
         return error[key];
     }
 
-
-
     constructor({ rules, options, vModelKey, context, errorEl, targetEl }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement }) {
         this.targetEl = targetEl;
         this.errorEl = errorEl;
@@ -110,5 +110,10 @@ export class Validator {
         this.context = context;
         this.options = options;
         this.setValidators({ rules, options })
+    }
+
+    refresh({ rules, options }: { rules: rules, options: options}) {
+        this.options = options;
+        this.setValidators({ rules, options });
     }
 }
