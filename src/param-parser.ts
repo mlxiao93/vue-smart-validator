@@ -6,7 +6,7 @@ export type options = {
 export type rules = Array<{
     key: string|object|Function,
     modifies?: object|string|number,
-    message?: object,
+    message?: string,
     trigger?: string
 }>;
 

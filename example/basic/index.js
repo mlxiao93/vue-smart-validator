@@ -10,6 +10,9 @@ Vue.use(new Validator({
     rules: {
         foo: /foo/
     },
+    messages: {
+        number: '数字数字数字aaa'
+    },
     appendErrorTip: true
 }));
 

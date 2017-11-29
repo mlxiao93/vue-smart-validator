@@ -17,6 +17,10 @@ export default class Options {
                 return /^\d*$/.test(value);
             }
         },
+        messages: {
+            required: '不能为空',
+            number: '必须为数字'
+        },
         appendErrorTip: false
     };
 
@@ -49,13 +53,15 @@ export default class Options {
                     ...(globalVal || {}),
                     ...(localVal || {})
                 };
-            } else if (toString.call(defaultVal) === '[object Array]') {
-                options[key] = [
-                    ...defaultVal,
-                    ...(globalVal || {}),
-                    ...(localVal || {})
-                ];
-            } else {
+            }
+            // else if (toString.call(defaultVal) === '[object Array]') {
+            //     options[key] = [
+            //         ...defaultVal,
+            //         ...(globalVal || {}),
+            //         ...(localVal || {})
+            //     ];
+            // }
+            else {
                 options[key] = defaultVal;
                 if (!isNullOrUndefined(localVal)) {
                     options[key] = localVal;
@@ -69,7 +75,15 @@ export default class Options {
         if (directiveOptions) {
             Object.keys(directiveOptions).map(key => {
                 if (key === 'rules') return;
-                options[key] = directiveOptions[key];
+                let val = directiveOptions[key];
+                if (toString.call(val) === '[object Object]') {
+                    options[key] = {
+                        ...options[key],
+                        ...val
+                    }
+                } else {
+                    options[key] = val;
+                }
             })
         }
 

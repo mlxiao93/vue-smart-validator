@@ -23,9 +23,17 @@
 
         <br>
         <my-input v-model="a"
-                  v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]"></my-input>
+                  v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number'}, {rule: /123/, message: '必须是123'}]"></my-input>
 
 
+        <textarea v-model="c" v-validator="[{rule: 'required', message: '不能为空'}, {rule: 'bar'}, {rule: isHaha}]"></textarea>
+
+
+        <select v-model="d" v-validator="[{rule: 'required', message: '不能为空'}]"> <!--Supplement an id here instead of using 'name'-->
+            <option value="1">Value 1</option>
+            <option value="2">Value 2</option>
+            <option value="3">Value 3</option>
+        </select>
 
         <!--<input type="text"-->
                <!--v-model="b"-->
@@ -93,17 +101,20 @@
                 a: 1,
                 b: 2,
                 c: 3,
-                d: 4,
+                d: '',
                 flag: true
             }
         },
         computed: {
         },
         methods: {
+            isHaha(val) {
+                return val === 'haha';
+            },
             submit() {
                 let { $validator } = this;
                 $validator.check();
-                console.log($validator.getError('a'));
+                console.log($validator.getError());
             }
         },
         created () {
@@ -111,7 +122,10 @@
                 rules: {
                     bar: /bar/
                 },
-                appendErrorTip: true
+                messages: {
+                    bar: 'hahaah'
+                },
+                appendErrorTip: false
             })
         }
     }

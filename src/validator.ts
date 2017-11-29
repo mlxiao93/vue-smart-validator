@@ -28,12 +28,17 @@ export class Validator {
             let rule = Rule.getRule(key);
             if (!rule) return console.error(`smart validator: rule '${key}' do not exists`);
             let _trigger = trigger || options.trigger || Options.getInstance().getOptions().trigger;
+
+            if (toString.call(key) === '[object String]') {
+                message = message || Options.getInstance().getOptions().messages[<string>key];
+            }
+
             validators.push({
                 index,
                 key: typeof key === 'string' ? key : undefined,
                 check: (message => {
                     return modelValue => {
-                        if (!rule(modelValue, modifies)) return message;
+                        if (!rule(modelValue, modifies)) return message || 'message not set';
                     }
                 })(message),
                 trigger: _trigger
