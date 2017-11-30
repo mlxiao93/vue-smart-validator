@@ -1,6 +1,6 @@
 {
   "name": "vue-smart-validator",
-  "version": "0.3.0",
+  "version": "0.2.0",
   "description": "Smart Vue.js validation plugin",
   "main": "dist/validator.common.js",
   "module": "dist/validator.esm.js",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@types/jasmine": "2.6.0",
     "@types/node": "^8.0.47",
+    "@types/uuid": "^3.4.3",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-external-helpers": "^6.22.0",
@@ -62,5 +63,8 @@
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3"
+  },
+  "dependencies": {
+    "uuid": "^3.1.0"
   }
 }

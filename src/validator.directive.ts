@@ -2,6 +2,7 @@ import {DirectiveParamParser} from './param-parser'
 import {Validator} from "./validator";
 import Validators from "./validators";
 import ErrorTrigger from  './error-trigger'
+import * as uuid from 'uuid/v1'
 
 export default {
     bind(el, bindings, vnode) {
@@ -17,30 +18,40 @@ export default {
             options: paramParser.options,
             vModelKey: paramParser.vModelKey
         });
-        console.log(data);
         let $validator = Validators.getInstance(context._uid);
         $validator.setContext(context);
         $validator.addValidator({validator, options: paramParser.options, vModelKey: paramParser.vModelKey});
         context.$validator = $validator;
+        data.$validator = validator;
 
         // 触发校验
         el.errorTrigger = new ErrorTrigger({validator});
         el.errorTrigger.register();
+
+        // 钩子之间共享validator对象
+        let validatorUUid = uuid();
+        el.setAttribute('data-validator-uuid', validatorUUid);
+        context.$validatorTmp = context.$validatorTmp || {};
+        context.$validatorTmp[validatorUUid] = validator;
     },
     update(el, bindings, vnode, oldVnode) {
-
         let { value, modifiers } = bindings;
-        let {data} = vnode;
+        let {data, context} = vnode;
+
+        let oldModal = oldVnode.data.directives.filter(item => item.name === 'model')[0] || oldVnode.data.model;
+        let newModal = vnode.data.directives.filter(item => item.name === 'model')[0] || vnode.data.model;
+
         let paramParser = new DirectiveParamParser({modifiers, value, data});
-        vnode.context.$validator.refresh({
+
+        // 更新validator对象
+        let validator = context.$validatorTmp[el.getAttribute('data-validator-uuid')];
+        validator.refresh({
             rules: paramParser.rules,
             options: paramParser.options,
             context: vnode.context,
             vnode
         });
 
-        let oldModal = oldVnode.data.model || oldVnode.data.directives.filter(item => item.name === 'model')[0];
-        let newModal = vnode.data.model || vnode.data.directives.filter(item => item.name === 'model')[0];
         if (oldModal.value !== newModal.value) {
             el.errorTrigger.triggerChange();
         }

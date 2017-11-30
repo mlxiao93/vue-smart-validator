@@ -56,9 +56,14 @@ export class Validator {
 
     check({ trigger }: { trigger?: string }) {
         let { validators, context, errorEl, vModelKey, vnode } = this;
+
         // let modelValue = scopedEval(vModelKey, context);
-        let model = vnode.data.model || vnode.data.directives.filter(item => item.name === 'model')[0];
+
+        let model = vnode.data.directives.filter(item => item.name === 'model')[0] || vnode.data.model;
         let modelValue = model.value;
+
+        // console.log(model);
+
         for (let validator of validators) {
             if (trigger) {
                 (validator.trigger === trigger) && (validator.errorMessage = validator.check(modelValue));
@@ -105,7 +110,7 @@ export class Validator {
         return error[key];
     }
 
-    constructor({ rules, options, vModelKey, context, errorEl, targetEl, vnode }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement, vnode: any }) {
+    constructor({ rules, options, vModelKey, context, errorEl, targetEl, vnode }) {
         this.targetEl = targetEl;
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;

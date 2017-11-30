@@ -28,12 +28,6 @@ export default class Validators {
         });
     }
 
-    refresh({ rules, options, context, vnode }) {
-        this.validators.map(({validator}) => {
-            validator.refresh({ rules, options, context, vnode});
-        })
-    }
-
     check(index?: string|{ group: string }) {
         let { validators } = this;
         validators.map(({ key, group, validator }) => {
