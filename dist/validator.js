@@ -97,6 +97,8 @@ var DirectiveParamParser = /** @class */ (function () {
                 continue;
             var attrVal = el.attributes[i].nodeValue;
             attrName = attrName.replace('validator-', '');
+            if (attrVal === 'false')
+                attrVal = false;
             options[attrName] = attrVal;
         }
         if (!Array.isArray(directiveValue)) {
@@ -269,6 +271,7 @@ var Options = /** @class */ (function () {
             var defaultVal = defaults[key];
             var globalVal = global[key];
             var localVal = local[key];
+            key = key.toLowerCase();
             if (toString.call(defaultVal) === '[object Object]') {
                 options[key] = __assign({}, defaultVal, (globalVal || {}), (localVal || {}));
             }
@@ -287,6 +290,7 @@ var Options = /** @class */ (function () {
                 if (key === 'rules')
                     return;
                 var val = directiveOptions[key];
+                key = key.toLowerCase();
                 if (toString.call(val) === '[object Object]') {
                     options[key] = __assign({}, options[key], val);
                 }
@@ -410,6 +414,7 @@ var Validator = /** @class */ (function () {
         var model = vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0] || vnode.data.model;
         var modelValue = model.value;
         // console.log(model);
+        var options = Options.getInstance().getOptions(this.options);
         for (var _i = 0, validators_1 = validators; _i < validators_1.length; _i++) {
             var validator = validators_1[_i];
             if (trigger) {
@@ -418,13 +423,15 @@ var Validator = /** @class */ (function () {
             else {
                 validator.errorMessage = validator.check(modelValue);
             }
+            if (options.nullable && validator.key !== 'required' && (modelValue === '' || modelValue === undefined)) {
+                validator.errorMessage = '';
+            }
         }
         var message = this.firstError();
-        var options = Options.getInstance().getOptions(this.options);
         if (message) {
             errorEl.classList.add('validator-has-error');
             errorEl.setAttribute('data-validator-error', message);
-            if (options.appendErrorTip) {
+            if (options.appenderrortip) {
                 appendErrorEl(errorEl, message);
             }
         }
