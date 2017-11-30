@@ -139,15 +139,15 @@ function length(value, _a) {
     if (value === void 0) { value = ''; }
     var val = _a.val, max = _a.max, min = _a.min;
     if (val !== undefined) {
-        if (value.length !== val)
+        if ((value + '').length !== val)
             return false;
     }
     if (max !== undefined) {
-        if (value.length > max)
+        if ((value + '').length > max)
             return false;
     }
     if (min !== undefined) {
-        if (value.length < min)
+        if ((value + '').length < min)
             return false;
     }
     return true;
