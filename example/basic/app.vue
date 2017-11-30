@@ -3,8 +3,8 @@
         <input type="text" v-model="a">
         <br>
         <input type="text"
-               v-model="b"
-               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'length', min: 2}, {rule: 'length', max: 5}]"
+               v-model.number="b"
+               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'number', min: 10}, {rule: 'length', max: 5}]"
         >
 
         <!--<input type="text"-->

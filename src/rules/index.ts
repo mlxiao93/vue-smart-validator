@@ -10,13 +10,13 @@ export const email = /^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\
 
 export function length (value = '', {val, max, min}) {
     if (val !== undefined) {
-        if (value.length !== val) return false;
+        if ((value + '').length !== val) return false;
     }
     if (max !== undefined) {
-        if (value.length > max) return false;
+        if ((value + '').length > max) return false;
     }
     if (min !== undefined) {
-        if (value.length < min) return false;
+        if ((value + '').length < min) return false;
     }
     return true;
 }
