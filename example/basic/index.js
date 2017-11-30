@@ -11,7 +11,7 @@ Vue.use(new Validator({
         foo: /foo/
     },
     messages: {
-        number: '数字数字数字aaa'
+
     },
     appendErrorTip: true
 }));

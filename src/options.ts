@@ -1,5 +1,7 @@
 import {isNullOrUndefined} from "./util/data";
 import { isEmpty } from './util/data';
+import * as rules from './rules/index'
+import messages from './rules/messages'
 
 export default class Options {
     static instance = new Options();
@@ -9,21 +11,8 @@ export default class Options {
 
     private defaults = {
         trigger: 'change',
-        rules: {
-            required (value) {
-                return !isEmpty(value);
-            },
-            number (value, args) {
-                return /^\d*$/.test(value);
-            },
-            notEqual (value, args) {
-                return value != args.value;
-            }
-        },
-        messages: {
-            required: '不能为空',
-            number: '必须为数字'
-        },
+        rules,
+        messages,
         appendErrorTip: false
     };
 

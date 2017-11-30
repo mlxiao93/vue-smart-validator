@@ -23,7 +23,6 @@ export class Validator {
     context: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
-        console.log('here');
         this.validators = [];
         let { validators, errorEl } = this;
         rules.map(({ key, modifies, message, trigger }, index) => {

@@ -4,7 +4,7 @@
         <br>
         <input type="text"
                v-model="b"
-               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'notEqual', value: a, message: `不能等于${a}`}]"
+               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'length', min: 2}, {rule: 'length', max: 5}]"
         >
 
         <!--<input type="text"-->
