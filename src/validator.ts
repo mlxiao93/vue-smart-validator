@@ -63,22 +63,26 @@ export class Validator {
 
         // console.log(model);
 
+        let options = Options.getInstance().getOptions(this.options);
+
         for (let validator of validators) {
             if (trigger) {
                 (validator.trigger === trigger) && (validator.errorMessage = validator.check(modelValue));
             } else {
                 validator.errorMessage = validator.check(modelValue);
             }
+
+            if (options.nullable && validator.key !== 'required' && (modelValue === '' || modelValue === undefined)) {
+                validator.errorMessage = '';
+            }
         }
         let message = this.firstError();
-
-        let options = Options.getInstance().getOptions(this.options);
 
         if (message) {
             errorEl.classList.add('validator-has-error');
             errorEl.setAttribute('data-validator-error', message);
 
-            if (options.appendErrorTip) {
+            if (options.appenderrortip) {
                 appendErrorEl(errorEl, message);
             }
 

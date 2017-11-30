@@ -39,6 +39,7 @@ export default class Options {
             let globalVal = global[key];
             let localVal = local[key];
 
+            key = key.toLowerCase();
             if (toString.call(defaultVal) === '[object Object]') {
                 options[key] = {
                     ...defaultVal,
@@ -68,6 +69,7 @@ export default class Options {
             Object.keys(directiveOptions).map(key => {
                 if (key === 'rules') return;
                 let val = directiveOptions[key];
+                key = key.toLowerCase();
                 if (toString.call(val) === '[object Object]') {
                     options[key] = {
                         ...options[key],

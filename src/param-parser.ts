@@ -95,7 +95,8 @@ export class DirectiveParamParser {
             if (!/^validator-/.test(attrName)) continue;
             let attrVal =  el.attributes[i].nodeValue;
             attrName = attrName.replace('validator-', '');
-            options[attrName] = attrVal
+            if (attrVal === 'false') attrVal = false;
+            options[attrName] = attrVal;
         }
         if (!Array.isArray(<any>directiveValue)) {
             options = {...options, ...directiveValue};
