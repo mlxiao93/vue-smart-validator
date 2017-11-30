@@ -312,17 +312,6 @@ var Rule = /** @class */ (function () {
     return Rule;
 }());
 
-/**
- * @param expression 表达式 eg: a + b
- * @param scope eval函数执行上下文 eg: {a: 1, b: 2}
- * @returns {any}  表达式返回值 eg: 3
- */
-var scopedEval = function (expression, scope) {
-    var keys = Object.keys(scope);
-    var values = keys.map(function (key) { return scope[key]; });
-    return Function.apply(void 0, keys.concat(["return " + expression])).apply(scope, values);
-};
-
 function isEditableFormEl(el) {
     return ['input', 'select', 'textarea'].indexOf(el.tagName.toLowerCase()) >= 0;
 }
@@ -353,12 +342,13 @@ function removeErrorEl(target) {
 
 var Validator = /** @class */ (function () {
     function Validator(_a) {
-        var rules = _a.rules, options = _a.options, vModelKey = _a.vModelKey, context = _a.context, errorEl = _a.errorEl, targetEl = _a.targetEl;
+        var rules = _a.rules, options = _a.options, vModelKey = _a.vModelKey, context = _a.context, errorEl = _a.errorEl, targetEl = _a.targetEl, vnode = _a.vnode;
         this.validators = [];
         this.targetEl = targetEl;
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
+        this.vnode = vnode;
         this.options = options;
         this.setValidators({ rules: rules, options: options });
     }
@@ -395,8 +385,10 @@ var Validator = /** @class */ (function () {
     };
     Validator.prototype.check = function (_a) {
         var trigger = _a.trigger;
-        var _b = this, validators = _b.validators, context = _b.context, errorEl = _b.errorEl, vModelKey = _b.vModelKey;
-        var modelValue = scopedEval(vModelKey, context);
+        var _b = this, validators = _b.validators, context = _b.context, errorEl = _b.errorEl, vModelKey = _b.vModelKey, vnode = _b.vnode;
+        // let modelValue = scopedEval(vModelKey, context);
+        var model = vnode.data.model || vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];
+        var modelValue = model.value;
         for (var _i = 0, validators_1 = validators; _i < validators_1.length; _i++) {
             var validator = validators_1[_i];
             if (trigger) {
@@ -444,8 +436,10 @@ var Validator = /** @class */ (function () {
         return error[key];
     };
     Validator.prototype.refresh = function (_a) {
-        var rules = _a.rules, options = _a.options;
+        var rules = _a.rules, options = _a.options, context = _a.context, vnode = _a.vnode;
         this.options = options;
+        this.context = context;
+        this.vnode = vnode;
         this.setValidators({ rules: rules, options: options });
     };
     return Validator;
@@ -473,10 +467,10 @@ var Validators = /** @class */ (function () {
         });
     };
     Validators.prototype.refresh = function (_a) {
-        var rules = _a.rules, options = _a.options;
+        var rules = _a.rules, options = _a.options, context = _a.context, vnode = _a.vnode;
         this.validators.map(function (_a) {
             var validator = _a.validator;
-            validator.refresh({ rules: rules, options: options });
+            validator.refresh({ rules: rules, options: options, context: context, vnode: vnode });
         });
     };
     Validators.prototype.check = function (index) {
@@ -602,10 +596,12 @@ var validatorDirective = {
             targetEl: el,
             errorEl: el,
             context: context,
+            vnode: vnode,
             rules: paramParser.rules,
             options: paramParser.options,
             vModelKey: paramParser.vModelKey
         });
+        console.log(data);
         var $validator = Validators.getInstance(context._uid);
         $validator.setContext(context);
         $validator.addValidator({ validator: validator, options: paramParser.options, vModelKey: paramParser.vModelKey });
@@ -620,7 +616,9 @@ var validatorDirective = {
         var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data });
         vnode.context.$validator.refresh({
             rules: paramParser.rules,
-            options: paramParser.options
+            options: paramParser.options,
+            context: vnode.context,
+            vnode: vnode
         });
         var oldModal = oldVnode.data.model || oldVnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];
         var newModal = vnode.data.model || vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];

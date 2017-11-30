@@ -28,9 +28,9 @@ export default class Validators {
         });
     }
 
-    refresh({ rules, options }: { rules: rules, options: options}) {
+    refresh({ rules, options, context, vnode }) {
         this.validators.map(({validator}) => {
-            validator.refresh({ rules, options });
+            validator.refresh({ rules, options, context, vnode});
         })
     }
 

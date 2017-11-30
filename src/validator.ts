@@ -21,6 +21,7 @@ export class Validator {
     }> = [];
 
     context: any;
+    vnode: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
         this.validators = [];
@@ -54,8 +55,10 @@ export class Validator {
     }
 
     check({ trigger }: { trigger?: string }) {
-        let { validators, context, errorEl, vModelKey } = this;
-        let modelValue = scopedEval(vModelKey, context);
+        let { validators, context, errorEl, vModelKey, vnode } = this;
+        // let modelValue = scopedEval(vModelKey, context);
+        let model = vnode.data.model || vnode.data.directives.filter(item => item.name === 'model')[0];
+        let modelValue = model.value;
         for (let validator of validators) {
             if (trigger) {
                 (validator.trigger === trigger) && (validator.errorMessage = validator.check(modelValue));
@@ -102,17 +105,20 @@ export class Validator {
         return error[key];
     }
 
-    constructor({ rules, options, vModelKey, context, errorEl, targetEl }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement }) {
+    constructor({ rules, options, vModelKey, context, errorEl, targetEl, vnode }: { rules: rules, options: options, vModelKey: string, context: object, errorEl: HTMLElement, targetEl: HTMLElement, vnode: any }) {
         this.targetEl = targetEl;
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
+        this.vnode = vnode;
         this.options = options;
         this.setValidators({ rules, options })
     }
 
-    refresh({ rules, options }: { rules: rules, options: options}) {
+    refresh({ rules, options, context, vnode }) {
         this.options = options;
+        this.context = context;
+        this.vnode = vnode;
         this.setValidators({ rules, options });
     }
 }

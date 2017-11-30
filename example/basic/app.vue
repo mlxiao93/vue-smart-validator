@@ -1,11 +1,11 @@
 <template>
     <div>
-        <input type="text" v-model="a">
-        <br>
-        <input type="text"
-               v-model.number="b"
-               v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'number', min: 10}, {rule: 'length', max: 5}]"
-        >
+        <!--<input type="text" v-model="a">-->
+        <!--<br>-->
+        <!--<input type="text"-->
+               <!--v-model.number="b"-->
+               <!--v-validator.appendErrorTip="[{rule: 'required', message: '必填'}, {rule: 'number', min: 10}, {rule: 'length', max: 5}]"-->
+        <!--&gt;-->
 
         <!--<input type="text"-->
                <!--v-model="a"-->
@@ -82,6 +82,22 @@
                <!--v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
         <!--&gt;-->
 
+        <!--<input type="text" v-model="a" v-validator="[{rule: 'required'}]">-->
+
+        <el-table :data="tableData">
+            <el-table-column>
+                <template slot-scope="scope">
+                    <el-input v-model="scope.row.id" v-validator.appendErrorTip.key@haha="[{rule: 'required'}]"></el-input>
+                </template>
+            </el-table-column>
+            <el-table-column>
+                <template slot-scope="scope">
+                    <input v-model="scope.row.id" v-validator.appendErrorTip="[{rule: 'required'}]"></input>
+                </template>
+            </el-table-column>
+        </el-table>
+
+
         <div>
             <button @click="submit">submit</button>
         </div>
@@ -104,7 +120,12 @@
                 b: 2,
                 c: 3,
                 d: '',
-                flag: true
+                flag: true,
+                tableData: [
+                    {
+                        id: 0
+                    }
+                ]
             }
         },
         computed: {

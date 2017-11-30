@@ -12,10 +12,12 @@ export default {
             targetEl: el,
             errorEl: el,
             context,
+            vnode,
             rules: paramParser.rules,
             options: paramParser.options,
             vModelKey: paramParser.vModelKey
         });
+        console.log(data);
         let $validator = Validators.getInstance(context._uid);
         $validator.setContext(context);
         $validator.addValidator({validator, options: paramParser.options, vModelKey: paramParser.vModelKey});
@@ -32,7 +34,9 @@ export default {
         let paramParser = new DirectiveParamParser({modifiers, value, data});
         vnode.context.$validator.refresh({
             rules: paramParser.rules,
-            options: paramParser.options
+            options: paramParser.options,
+            context: vnode.context,
+            vnode
         });
 
         let oldModal = oldVnode.data.model || oldVnode.data.directives.filter(item => item.name === 'model')[0];
