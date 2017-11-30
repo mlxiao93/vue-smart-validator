@@ -82,15 +82,15 @@
                <!--v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
         <!--&gt;-->
 
-        <input type="text" v-model="bar.a" v-validator="[{rule: 'required'}]">
-        <input type="text" v-model="b" v-validator="[{rule: 'required'}]">
-        <input type="text" v-model="c" v-validator="[{rule: 'required'}]">
-        <el-input type="text" v-model="d" v-validator="[{rule: 'required'}]"></el-input>
+        <!--<input type="text" v-model="bar.a" v-validator="[{rule: 'required'}]" validator-trigger="change">-->
+        <!--<input type="text" v-model="b" v-validator="[{rule: 'required'}]">-->
+        <!--<input type="text" v-model="c" v-validator="[{rule: 'required'}]">-->
+        <!--<el-input type="text" v-model="d" v-validator="[{rule: 'required'}]"></el-input>-->
 
         <el-table :data="tableData">
             <el-table-column>
                 <template slot-scope="scope">
-                    <input v-model="scope.row.id" v-validator.appendErrorTip="{rules: [{rule: 'required'}], key: `${scope.row.id}id`}"></input>
+                    <input v-model="scope.row.value" v-validator.appendErrorTip="[{rule: 'required'}]" :validator-key="`id${scope.row.id}`"></input>
                 </template>
             </el-table-column>
         </el-table>
@@ -121,13 +121,16 @@
                 flag: true,
                 tableData: [
                     {
-                        id: 0
+                        id: 0,
+                        value: 10
                     },
                     {
                         id: 1,
+                        value: 20
                     },
                     {
-                        id: 2
+                        id: 2,
+                        value: 30
                     }
                 ]
             }

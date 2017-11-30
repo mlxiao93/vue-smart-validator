@@ -18,12 +18,12 @@ const __assign = Object.assign || function (target) {
 
 var DirectiveParamParser = /** @class */ (function () {
     function DirectiveParamParser(_a) {
-        var modifiers = _a.modifiers, value = _a.value, data = _a.data;
+        var modifiers = _a.modifiers, value = _a.value, data = _a.data, el = _a.el;
         this.setVModelKey(data);
         this.setDirectiveValue({ value: value });
         this.setModifiersObj({ modifiers: modifiers });
         this.setRules();
-        this.setOptions();
+        this.setOptions({ el: el });
     }
     DirectiveParamParser.prototype.setDirectiveValue = function (_a) {
         var value = _a.value;
@@ -86,10 +86,19 @@ var DirectiveParamParser = /** @class */ (function () {
             return _rule;
         });
     };
-    DirectiveParamParser.prototype.setOptions = function () {
-        var _a = this, directiveValue = _a.directiveValue, modifiersObj = _a.modifiersObj, rules = _a.rules;
+    DirectiveParamParser.prototype.setOptions = function (_a) {
+        var el = _a.el;
+        var _b = this, directiveValue = _b.directiveValue, modifiersObj = _b.modifiersObj, rules = _b.rules;
         var options = modifiersObj;
         options.rules = rules;
+        for (var i in el.attributes) {
+            var attrName = el.attributes[i].nodeName;
+            if (!/^validator-/.test(attrName))
+                continue;
+            var attrVal = el.attributes[i].nodeValue;
+            attrName = attrName.replace('validator-', '');
+            options[attrName] = attrVal;
+        }
         if (!Array.isArray(directiveValue)) {
             options = __assign({}, options, directiveValue);
         }
@@ -134,6 +143,17 @@ function isEmpty(val) {
 }
 function isNullOrUndefined(val) {
     return val === null || val === undefined;
+}
+function uuid() {
+    var d = new Date().getTime();
+    if (typeof performance !== 'undefined' && typeof performance.now === 'function') {
+        d += performance.now(); //use high-precision timer if available
+    }
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = (d + Math.random() * 16) % 16 | 0;
+        d = Math.floor(d / 16);
+        return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
 }
 
 function required(value) {
@@ -387,8 +407,9 @@ var Validator = /** @class */ (function () {
         var trigger = _a.trigger;
         var _b = this, validators = _b.validators, context = _b.context, errorEl = _b.errorEl, vModelKey = _b.vModelKey, vnode = _b.vnode;
         // let modelValue = scopedEval(vModelKey, context);
-        var model = vnode.data.model || vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];
+        var model = vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0] || vnode.data.model;
         var modelValue = model.value;
+        // console.log(model);
         for (var _i = 0, validators_1 = validators; _i < validators_1.length; _i++) {
             var validator = validators_1[_i];
             if (trigger) {
@@ -464,13 +485,6 @@ var Validators = /** @class */ (function () {
             key: options.key || vModelKey,
             group: options.group,
             validator: validator
-        });
-    };
-    Validators.prototype.refresh = function (_a) {
-        var rules = _a.rules, options = _a.options, context = _a.context, vnode = _a.vnode;
-        this.validators.map(function (_a) {
-            var validator = _a.validator;
-            validator.refresh({ rules: rules, options: options, context: context, vnode: vnode });
         });
     };
     Validators.prototype.check = function (index) {
@@ -591,7 +605,7 @@ var validatorDirective = {
     bind: function (el, bindings, vnode) {
         var value = bindings.value, modifiers = bindings.modifiers;
         var context = vnode.context, data = vnode.data;
-        var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data });
+        var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data, el: el });
         var validator = new Validator({
             targetEl: el,
             errorEl: el,
@@ -601,27 +615,34 @@ var validatorDirective = {
             options: paramParser.options,
             vModelKey: paramParser.vModelKey
         });
-        console.log(data);
         var $validator = Validators.getInstance(context._uid);
         $validator.setContext(context);
         $validator.addValidator({ validator: validator, options: paramParser.options, vModelKey: paramParser.vModelKey });
         context.$validator = $validator;
+        data.$validator = validator;
         // 触发校验
         el.errorTrigger = new ErrorTrigger({ validator: validator });
         el.errorTrigger.register();
+        // 钩子之间共享validator对象
+        var validatorUUid = uuid();
+        el.setAttribute('data-validator-uuid', validatorUUid);
+        context.$validatorTmp = context.$validatorTmp || {};
+        context.$validatorTmp[validatorUUid] = validator;
     },
     update: function (el, bindings, vnode, oldVnode) {
         var value = bindings.value, modifiers = bindings.modifiers;
-        var data = vnode.data;
-        var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data });
-        vnode.context.$validator.refresh({
+        var data = vnode.data, context = vnode.context;
+        var oldModal = oldVnode.data.directives.filter(function (item) { return item.name === 'model'; })[0] || oldVnode.data.model;
+        var newModal = vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0] || vnode.data.model;
+        var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data, el: el });
+        // 更新validator对象
+        var validator = context.$validatorTmp[el.getAttribute('data-validator-uuid')];
+        validator.refresh({
             rules: paramParser.rules,
             options: paramParser.options,
             context: vnode.context,
             vnode: vnode
         });
-        var oldModal = oldVnode.data.model || oldVnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];
-        var newModal = vnode.data.model || vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0];
         if (oldModal.value !== newModal.value) {
             el.errorTrigger.triggerChange();
         }

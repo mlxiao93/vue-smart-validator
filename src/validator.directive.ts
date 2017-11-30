@@ -2,13 +2,13 @@ import {DirectiveParamParser} from './param-parser'
 import {Validator} from "./validator";
 import Validators from "./validators";
 import ErrorTrigger from  './error-trigger'
-import * as uuid from 'uuid/v1'
+import {uuid} from './util/data'
 
 export default {
     bind(el, bindings, vnode) {
         let { value, modifiers } = bindings;
         let {context, data} = vnode;
-        let paramParser = new DirectiveParamParser({modifiers, value, data});
+        let paramParser = new DirectiveParamParser({modifiers, value, data, el});
         let validator = new Validator({
             targetEl: el,
             errorEl: el,
@@ -41,7 +41,7 @@ export default {
         let oldModal = oldVnode.data.directives.filter(item => item.name === 'model')[0] || oldVnode.data.model;
         let newModal = vnode.data.directives.filter(item => item.name === 'model')[0] || vnode.data.model;
 
-        let paramParser = new DirectiveParamParser({modifiers, value, data});
+        let paramParser = new DirectiveParamParser({modifiers, value, data, el});
 
         // 更新validator对象
         let validator = context.$validatorTmp[el.getAttribute('data-validator-uuid')];

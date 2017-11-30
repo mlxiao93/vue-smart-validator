@@ -86,10 +86,17 @@ export class DirectiveParamParser {
         })
     }
 
-    private setOptions() {
+    private setOptions({el}) {
         let { directiveValue, modifiersObj, rules } = this;
         let options = modifiersObj;
         options.rules = rules;
+        for (let i in el.attributes) {
+            let attrName = el.attributes[i].nodeName;
+            if (!/^validator-/.test(attrName)) continue;
+            let attrVal =  el.attributes[i].nodeValue;
+            attrName = attrName.replace('validator-', '');
+            options[attrName] = attrVal
+        }
         if (!Array.isArray(<any>directiveValue)) {
             options = {...options, ...directiveValue};
         }
@@ -108,12 +115,12 @@ export class DirectiveParamParser {
         this.vModelKey = vModel.expression
     }
 
-    constructor({ modifiers, value, data }) {
+    constructor({ modifiers, value, data, el }) {
         this.setVModelKey(data);
         this.setDirectiveValue({ value });
         this.setModifiersObj( { modifiers } );
 
         this.setRules();
-        this.setOptions();
+        this.setOptions({el});
     }
 }

@@ -2,7 +2,6 @@ import { rules, options } from './param-parser'
 import { Rule } from "./rule";
 import Options from "./options";
 import {isEmpty} from "./util/data";
-import scopedEval from './util/scoped-eval'
 import {appendErrorEl, insertAfter, removeErrorEl} from "./util/dom";
 
 export class Validator {
