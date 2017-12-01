@@ -1,3 +1,5 @@
+A Vue.js directive for form validation 
+
 ### Installation
 
 ```
@@ -30,6 +32,6 @@ set ``appendErrorTip = true``
 <!-- error tip will append here automatically -->
 ```
 
-
+----
 
 **There are more powerful and flexible usage, see our [documentation and demos](#)**
