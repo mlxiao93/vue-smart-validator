@@ -7,6 +7,7 @@
   "unpkg": "dist/validator.js",
   "scripts": {
     "example": "webpack-dev-server --progress --hot --config example/webpack.config.babel.js",
+    "docs": "webpack-dev-server --progress --hot --config docs-src/webpack.config.babel.js",
     "test:unit": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
     "build": "rollup --config build/rollup.config.js"
   },
@@ -60,6 +61,7 @@
     "url-loader": "^0.6.2",
     "vue": "^2.5.2",
     "vue-loader": "^13.3.0",
+    "vue-markdown-loader": "^2.3.0",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3"
