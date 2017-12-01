@@ -18,18 +18,31 @@ Vue.use(new Validator());
 
 ### Basic Usage
 
-custom error tip
+Custom error tip
 ```html
 <input v-model="a" v-validator="[{rule: 'required', message: 'can not be null'}, {rule: 'number', message: 'must be number'}]">
 <span>{{$validator.firstError('a')}}</span>
 ```
 
-automatic error tip
+Automatic error tip
 
 set ``appendErrorTip = true``
 ```html
 <input v-model="a" validator-appendErrorTip="true" v-validator="[{rule: 'required', message: 'can not be null'}, {rule: 'number', message: 'must be number'}]">
 <!-- error tip will append here automatically -->
+```
+
+Trigger validation after submitted
+```
+methods: {    // vue methods
+    handleSubmit() {
+        let error = this.$validator.check().getError();
+        if (error) {
+            alert('has error');
+            return
+        }
+    }
+}
 ```
 
 ----
