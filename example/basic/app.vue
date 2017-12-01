@@ -95,6 +95,8 @@
             <!--</el-table-column>-->
         <!--</el-table>-->
 
+        <input v-model="a" v-validator="[{rule: 'required', message: 'can not be null'}]">
+        <span>{{$validator.getError('a')}}</span>
 
         <div>
             <button @click="submit">submit</button>
