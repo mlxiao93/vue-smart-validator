@@ -47,4 +47,4 @@ methods: {    // vue methods
 
 ----
 
-**There are more powerful and flexible usage, see our [documentation and demos](#)**
+**There are more powerful and flexible usage, see our [documentation and demos](//mlxiao93.github.io/vue-smart-validator)**
