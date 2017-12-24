@@ -371,9 +371,9 @@ var Validator = /** @class */ (function () {
         this.setValidators({ rules: rules, options: options });
     }
     Validator.prototype.setValidators = function (_a) {
+        var _this = this;
         var rules = _a.rules, options = _a.options;
-        this.validators = [];
-        var _b = this, validators = _b.validators;
+        var _validator = [];
         rules.map(function (_a, index) {
             var key = _a.key, modifies = _a.modifies, message = _a.message, trigger = _a.trigger;
             var rule = Rule.getRule(key);
@@ -383,7 +383,7 @@ var Validator = /** @class */ (function () {
             if (toString.call(key) === '[object String]') {
                 message = message || Options.getInstance().getOptions().messages[key];
             }
-            validators.push({
+            _validator.push({
                 index: index,
                 key: typeof key === 'string' ? key : undefined,
                 check: (function (message) {
@@ -395,9 +395,11 @@ var Validator = /** @class */ (function () {
                         }
                     };
                 })(message),
-                trigger: _trigger
+                trigger: _trigger,
+                errorMessage: _this.validators[index] && _this.validators[index].errorMessage
             });
         });
+        this.validators = _validator;
     };
     Validator.prototype.getExistsTriggers = function () {
         var triggerObj = {};
@@ -407,11 +409,12 @@ var Validator = /** @class */ (function () {
     Validator.prototype.check = function (_a) {
         var trigger = _a.trigger;
         var _b = this, validators = _b.validators, context = _b.context, errorEl = _b.errorEl, vModelKey = _b.vModelKey, vnode = _b.vnode;
-        // let modelValue = scopedEval(vModelKey, context);
         var model = vnode.data.directives.filter(function (item) { return item.name === 'model'; })[0] || vnode.data.model;
         var modelValue = model.value;
-        // console.log(model);
         var options = Options.getInstance().getOptions(this.options);
+        // if (trigger === 'change') {   // change时，先清空错误信息
+        //     this.validators.map(validator => validator.errorMessage = '');
+        // }
         for (var _i = 0, validators_1 = validators; _i < validators_1.length; _i++) {
             var validator = validators_1[_i];
             if (trigger) {
