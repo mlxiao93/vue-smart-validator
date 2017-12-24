@@ -1,5 +1,23 @@
+<style lang="scss">
+    .validator-has-error {
+        border: 1px solid red;
+        & + span {
+            color: red;
+            margin-left: .5em;
+        }
+    }
+    .container {
+        > div {
+            margin: 1em 0;
+        }
+        label {
+            display: inline-block;
+            width: 5em;
+        }
+    }
+</style>
 <template>
-    <div>
+    <div class="container">
         <!--<input type="text" v-model="a">-->
         <!--<br>-->
         <!--<input type="text"-->
@@ -16,14 +34,12 @@
         <!--{{$validator && $validator}}-->
         <!--<br>-->
 
-        <br>
 
         <!--<el-input v-model="a"-->
                   <!--v-validator.trigger@blur="[{rule: 'required', message: '不能为空'}, {rule: 'number', message: '必须是数字'}, {rule: /123/, message: '必须是123'}]">-->
 
         <!--</el-input>-->
 
-        <br>
         <!--<my-input v-model="a"-->
                   <!--v-validator.trigger@change="[{rule: 'required', message: '不能为空'}, {rule: 'number'}, {rule: /123/, message: '必须是123'}]"></my-input>-->
 
@@ -82,7 +98,7 @@
                <!--v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
         <!--&gt;-->
 
-        <input type="text" v-model="bar.a" v-validator="[{rule: 'number', max: 10, message: (val) => val}]" validator-nullable="true" validator-trigger="change">
+        <!--<input type="text" v-model="bar.a" v-validator="[{rule: 'number', max: 10, message: (val) => val}]" validator-nullable="true" validator-trigger="blur">-->
         <!--<input type="text" v-model="b" v-validator="[{rule: 'required'}]">-->
         <!--<input type="text" v-model="c" v-validator="[{rule: 'required'}]">-->
         <!--<el-input type="text" v-model="d" v-validator="[{rule: 'required'}]"></el-input>-->
@@ -97,8 +113,19 @@
 
         <!--<input v-model="a" v-validator="[{rule: 'required', message: 'can not be null'}]">-->
 
+        <!--<div>-->
+            <!--<button @click="submit">submit</button>-->
+        <!--</div>-->
+
         <div>
-            <button @click="submit">submit</button>
+            <label>用户名：</label>
+            <input v-model="username" v-validator="validator.username" validator-appendErrorTip="ture">
+            <!--<span>{{$validator.firstError('username')}}</span>   &lt;!&ndash; 手动添加错误提示 &ndash;&gt;-->
+            <br>
+        </div>
+        <div>
+            <label>邮箱：</label>
+            <input v-model="email" v-validator="validator.email" validator-appendErrorTip="ture">  <!-- 自动添加错误提示 -->
         </div>
 
     </div>
@@ -111,6 +138,20 @@
         },
         data () {
             return {
+                username: '',
+                email: '',
+                validator: {
+                    username: [{rule: 'required', message: '必填', trigger: 'blur'}],    // 默认trigger为change
+                    email: {
+                        rules: [
+                            {rule: 'required', message: '必填'},
+                            {rule: 'email', message: '邮箱格式错误'}
+                        ],
+                        trigger: 'blur'
+                    }
+                },
+
+
                 foo: [1],
                 bar: {
                     a: 1
@@ -156,8 +197,8 @@
                 messages: {
                     bar: 'hahaah'
                 },
-                appendErrorTip: true,
-                trigger: 'blur'
+                // appendErrorTip: true,
+                // trigger: 'blur'
             })
         }
     }

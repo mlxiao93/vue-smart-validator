@@ -13,7 +13,7 @@ Vue.use(new Validator({
     messages: {
 
     },
-    appendErrorTip: true
+    // appendErrorTip: true
 }));
 
 new Vue({

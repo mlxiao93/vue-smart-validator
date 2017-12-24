@@ -23,8 +23,7 @@ export class Validator {
     vnode: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
-        this.validators = [];
-        let { validators, errorEl } = this;
+        let _validator = [];
         rules.map(({ key, modifies, message, trigger }, index) => {
             let rule = Rule.getRule(key);
             if (!rule) return console.error(`smart validator: rule '${key}' do not exists`);
@@ -34,7 +33,7 @@ export class Validator {
                 message = message || Options.getInstance().getOptions().messages[<string>key];
             }
 
-            validators.push({
+            _validator.push({
                 index,
                 key: typeof key === 'string' ? key : undefined,
                 check: (message => {
@@ -45,9 +44,11 @@ export class Validator {
                         }
                     }
                 })(message),
-                trigger: _trigger
+                trigger: _trigger,
+                errorMessage: this.validators[index] && this.validators[index].errorMessage
             })
-        })
+        });
+        this.validators = _validator;
     }
 
     getExistsTriggers() {
@@ -59,14 +60,14 @@ export class Validator {
     check({ trigger }: { trigger?: string }) {
         let { validators, context, errorEl, vModelKey, vnode } = this;
 
-        // let modelValue = scopedEval(vModelKey, context);
-
         let model = vnode.data.directives.filter(item => item.name === 'model')[0] || vnode.data.model;
         let modelValue = model.value;
 
-        // console.log(model);
-
         let options = Options.getInstance().getOptions(this.options);
+
+        // if (trigger === 'change') {   // change时，先清空错误信息
+        //     this.validators.map(validator => validator.errorMessage = '');
+        // }
 
         for (let validator of validators) {
             if (trigger) {
