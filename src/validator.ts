@@ -39,7 +39,10 @@ export class Validator {
                 key: typeof key === 'string' ? key : undefined,
                 check: (message => {
                     return modelValue => {
-                        if (!rule(modelValue, modifies)) return message || 'message not set';
+                        if (!rule(modelValue, modifies)) {
+                            if (typeof message === 'function') return message(modelValue);
+                            return message || 'message not set';
+                        }
                     }
                 })(message),
                 trigger: _trigger

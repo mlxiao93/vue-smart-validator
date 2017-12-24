@@ -394,8 +394,11 @@ var Validator = /** @class */ (function () {
                 key: typeof key === 'string' ? key : undefined,
                 check: (function (message) {
                     return function (modelValue) {
-                        if (!rule(modelValue, modifies))
+                        if (!rule(modelValue, modifies)) {
+                            if (typeof message === 'function')
+                                return message(modelValue);
                             return message || 'message not set';
+                        }
                     };
                 })(message),
                 trigger: _trigger

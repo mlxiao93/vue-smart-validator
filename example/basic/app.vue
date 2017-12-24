@@ -82,7 +82,7 @@
                <!--v-validator="{rules: [{rule: 'required', message: '格式错误', trigger: 'blur'}], group: 'a'}"-->
         <!--&gt;-->
 
-        <input type="text" v-model="bar.a" v-validator="[{rule: 'number'}]" validator-nullable="true" validator-trigger="change">
+        <input type="text" v-model="bar.a" v-validator="[{rule: 'number', max: 10, message: (val) => val}]" validator-nullable="true" validator-trigger="change">
         <!--<input type="text" v-model="b" v-validator="[{rule: 'required'}]">-->
         <!--<input type="text" v-model="c" v-validator="[{rule: 'required'}]">-->
         <!--<el-input type="text" v-model="d" v-validator="[{rule: 'required'}]"></el-input>-->
@@ -95,8 +95,7 @@
             <!--</el-table-column>-->
         <!--</el-table>-->
 
-        <input v-model="a" v-validator="[{rule: 'required', message: 'can not be null'}]">
-        <span>{{$validator.getError('a')}}</span>
+        <!--<input v-model="a" v-validator="[{rule: 'required', message: 'can not be null'}]">-->
 
         <div>
             <button @click="submit">submit</button>
