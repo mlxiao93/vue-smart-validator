@@ -1,6 +1,6 @@
 {
   "name": "vue-smart-validator",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "description": "Smart Vue.js validation plugin",
   "main": "dist/validator.common.js",
   "module": "dist/validator.esm.js",

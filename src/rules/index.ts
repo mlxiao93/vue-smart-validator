@@ -44,10 +44,10 @@ export function number (value, {max, min, integer, float, positive, negative}) {
     return true;
 }
 
-export function equal (value, args) {
-    return value == args.value;
+export function equal (value, {val}) {
+    return value == val;
 }
 
-export function notEqual (value, args) {
-    return value != args.value;
+export function notEqual (value, {val}) {
+    return value != val;
 }

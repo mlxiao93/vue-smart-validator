@@ -210,11 +210,13 @@ function number(value, _a) {
     }
     return true;
 }
-function equal(value, args) {
-    return value == args.value;
+function equal(value, _a) {
+    var val = _a.val;
+    return value == val;
 }
-function notEqual(value, args) {
-    return value != args.value;
+function notEqual(value, _a) {
+    var val = _a.val;
+    return value != val;
 }
 
 
