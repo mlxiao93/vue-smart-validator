@@ -15,12 +15,13 @@
     "url": "git+https://github.com/mlxiao93/vue-smart-validator.git"
   },
   "keywords": [
-    "Vue",
-    "VueJs",
-    "validate",
+    "validator",
+    "vue",
+    "vue.js",
+    "form",
     "validator",
     "validation",
-    "form"
+    "表单校验"
   ],
   "author": "maolin xiao <xml_hn@163.com>",
   "license": "MIT",
