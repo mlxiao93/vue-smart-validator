@@ -1,3 +1,5 @@
+## Vue form validator
+
 A Vue.js directive for form validation 
 
 ### Installation
