@@ -392,7 +392,7 @@ var Validator = /** @class */ (function () {
                     return function (modelValue) {
                         if (!rule(modelValue, modifies)) {
                             if (typeof message === 'function')
-                                return message(modelValue);
+                                return message(modelValue, modifies);
                             return message || 'message not set';
                         }
                     };

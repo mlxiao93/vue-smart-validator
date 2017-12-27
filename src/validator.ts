@@ -39,7 +39,7 @@ export class Validator {
                 check: (message => {
                     return modelValue => {
                         if (!rule(modelValue, modifies)) {
-                            if (typeof message === 'function') return message(modelValue);
+                            if (typeof message === 'function') return message(modelValue, modifies);
                             return message || 'message not set';
                         }
                     }
