@@ -345,19 +345,20 @@ function onlyOneEditableFormElChild(el) {
     return el.querySelectorAll('input, select, textarea').length === 1;
 }
 function insertAfter(newNode, referenceNode) {
-    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+    referenceNode.parentNode && referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
 }
 function appendErrorEl(target, message) {
     var nextEl = target.nextSibling;
     if (nextEl && nextEl.id === 'validator-error-tip') {
         nextEl.innerHTML = "" + message;
-        return;
+        return nextEl;
     }
     var errorEl = document.createElement('span');
     errorEl.id = 'validator-error-tip';
     errorEl.className = 'validator-error-tip';
     errorEl.innerHTML = "" + message;
     insertAfter(errorEl, target);
+    return errorEl;
 }
 function removeErrorEl(target) {
     var nextEl = target.nextSibling;
@@ -440,7 +441,7 @@ var Validator = /** @class */ (function () {
             errorEl.classList.add('validator-has-error');
             errorEl.setAttribute('data-validator-error', message);
             if (options.appenderrortip) {
-                appendErrorEl(errorEl, message);
+                this.errorTipEl = appendErrorEl(errorEl, message);
             }
         }
         else {
@@ -450,6 +451,15 @@ var Validator = /** @class */ (function () {
         }
         context.$forceUpdate();
         return this;
+    };
+    Validator.prototype.clearError = function () {
+        var _a = this, validators = _a.validators, errorEl = _a.errorEl;
+        validators.map(function (item) {
+            item.errorMessage = '';
+            errorEl.classList.remove('validator-has-error');
+            errorEl.removeAttribute('data-validator-error');
+        });
+        this.errorTipEl && this.errorTipEl.remove();
     };
     Validator.prototype.getError = function () {
         var error = {};
@@ -500,6 +510,12 @@ var Validators = /** @class */ (function () {
             key: options.key || vModelKey,
             group: options.group,
             validator: validator
+        });
+    };
+    Validators.prototype.removeValidator = function (_a) {
+        var validator = _a.validator;
+        this.validators = this.validators.filter(function (item) {
+            return item.key !== validator.vModelKey;
         });
     };
     Validators.prototype.check = function (index) {
@@ -603,7 +619,7 @@ var ErrorTrigger = /** @class */ (function () {
             if (onlyOneEditableFormElChild(targetEl)) {
                 triggers.map(function (trigger) {
                     targetEl.querySelector('input, select, textarea').addEventListener(trigger, function () {
-                        validator.check({ trigger: trigger });
+                        setTimeout(function () { return validator.check({ trigger: trigger }); });
                     });
                 });
             }
@@ -662,7 +678,10 @@ var validatorDirective = {
             el.errorTrigger.triggerChange();
         }
     },
-    unbind: function (el) {
+    unbind: function (el, bindings, vnode) {
+        var validator = vnode.context.$validatorTmp[el.getAttribute('data-validator-uuid')];
+        validator.clearError();
+        vnode.context.$validator.removeValidator({ validator: validator });
     }
 };
 
