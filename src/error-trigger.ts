@@ -45,7 +45,8 @@ export default class ErrorTrigger {
             if (onlyOneEditableFormElChild(targetEl)) {
                 triggers.map(trigger => {
                     targetEl.querySelector('input, select, textarea').addEventListener(trigger, () => {
-                        validator.check({trigger})
+                        setTimeout(() => validator.check({trigger}));
+
                     });
                 });
             }

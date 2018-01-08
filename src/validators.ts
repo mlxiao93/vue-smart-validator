@@ -1,6 +1,5 @@
 import {Validator} from "./validator";
 import {isEmpty} from "./util/data";
-import {options, rules} from "./param-parser";
 
 export default class Validators {
     static instanceMap = {};
@@ -25,6 +24,12 @@ export default class Validators {
             key: options.key || vModelKey,
             group: options.group,
             validator
+        });
+    }
+
+    removeValidator({validator}) {
+        this.validators = this.validators.filter(item => {
+            return item.key !== validator.vModelKey;
         });
     }
 

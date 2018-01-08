@@ -45,7 +45,6 @@ export default {
 
         // 更新validator对象
         let validator = context.$validatorTmp[el.getAttribute('data-validator-uuid')];
-
         validator.refresh({
             rules: paramParser.rules,
             options: paramParser.options,
@@ -58,7 +57,9 @@ export default {
         }
 
     },
-    unbind(el) {
-
+    unbind(el, bindings, vnode) {
+        let validator = vnode.context.$validatorTmp[el.getAttribute('data-validator-uuid')];
+        validator.clearError();
+        vnode.context.$validator.removeValidator({validator});
     }
 }

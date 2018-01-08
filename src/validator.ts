@@ -8,6 +8,7 @@ export class Validator {
 
     vModelKey;
     errorEl: HTMLElement;
+    errorTipEl: HTMLElement;
     targetEl: HTMLElement;
     options;
 
@@ -87,7 +88,7 @@ export class Validator {
             errorEl.setAttribute('data-validator-error', message);
 
             if (options.appenderrortip) {
-                appendErrorEl(errorEl, message);
+                this.errorTipEl = appendErrorEl(errorEl, message);
             }
 
         } else {
@@ -97,6 +98,16 @@ export class Validator {
         }
         context.$forceUpdate();
         return this;
+    }
+
+    clearError() {
+        let { validators, errorEl } = this;
+        validators.map(item => {
+            item.errorMessage = '';
+            errorEl.classList.remove('validator-has-error');
+            errorEl.removeAttribute('data-validator-error');
+        });
+        this.errorTipEl && this.errorTipEl.remove();
     }
 
     getError() {

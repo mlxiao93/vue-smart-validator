@@ -1,6 +1,6 @@
 <style lang="scss">
     .validator-has-error {
-        border: 1px solid red;
+        /*border: 1px solid red;*/
         & + span {
             color: red;
             margin-left: .5em;
@@ -18,21 +18,21 @@
 </style>
 <template>
     <div class="container">
-
-        <input type="text" v-model="models[1]" v-validator="[{rule: 'rule1', a: 1, b: 2}]">
+        <el-radio v-model="models[0]" :label="1">1</el-radio>
+        <el-radio v-model="models[0]" :label="2" v-validator="[{rule: 'required'}]">2</el-radio>
+        <br>
+        <el-input v-if="models[0] === 2" v-model="models[1]" v-validator="[{rule: 'required'}]"></el-input>
 
         <br>
-        <br>
 
-        <input type="text" v-model="models[2]" v-validator="[{rule: 'rule2', a: 1, b: 2}]">
-
+        <el-button @click="handleSubmit">submit</el-button>
     </div>
 </template>
 <script>
     import MyInput from './MyInput.vue'
     export default {
         components: {
-            MyInput
+
         },
         data () {
             return {
@@ -41,22 +41,18 @@
         },
         computed: {
         },
+        watch: {
+            models: {
+            }
+        },
         methods: {
+            handleSubmit() {
+                if (this.$validator.check().getError()) return;
+                alert('OK');
+            }
         },
         created () {
             this.$validator.options({
-                rules: {
-                    rule1: function(value, args) {
-                        return /abc/.test(value)
-                    },
-                    rule2: /abc/
-                },
-                messages: {
-                    rule1: 'rule1 error',
-                    rule2: function(value, args) {
-                        return `rule2 error  value: ${value}  args: ${JSON.stringify(args)}`
-                    }
-                },
                 appendErrorTip: true,
             })
         }
