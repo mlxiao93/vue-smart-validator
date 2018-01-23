@@ -50,3 +50,7 @@ methods: {    // vue methods
 ----
 
 **There are more powerful and flexible usage, see our [documentation and demos](//mlxiao93.github.io/docs-vue-smart-validator/index.html#/dash/intro)**
+
+### TODO
++ 规则number支持开区间
+
