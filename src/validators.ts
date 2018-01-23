@@ -49,7 +49,7 @@ export default class Validators {
 
     getError(index?: string|{ group: string }) {
         let { validators } = this;
-        let error;
+        let error = {};
         validators.filter(({ key, group }) => {
             if (index === undefined) {
                 return true;

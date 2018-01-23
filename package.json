@@ -8,7 +8,8 @@
   "scripts": {
     "example": "webpack-dev-server --progress --hot --config example/webpack.config.babel.js",
     "test:unit": "jasmine JASMINE_CONFIG_PATH=test/unit/jasmine.json",
-    "build": "rollup --config build/rollup.config.js"
+    "build": "rollup --config build/rollup.config.js",
+    "//build": "webpack --progress --config build/webpack.config.babel.js"
   },
   "repository": {
     "type": "git",
