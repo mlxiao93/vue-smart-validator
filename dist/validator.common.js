@@ -534,7 +534,7 @@ var Validators = /** @class */ (function () {
     };
     Validators.prototype.getError = function (index) {
         var validators = this.validators;
-        var error;
+        var error = {};
         validators.filter(function (_a) {
             var key = _a.key, group = _a.group;
             if (index === undefined) {
