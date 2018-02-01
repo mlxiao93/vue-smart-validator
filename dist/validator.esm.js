@@ -559,6 +559,10 @@ var Validators = /** @class */ (function () {
         });
         return error;
     };
+    Validators.prototype.hasError = function (index) {
+        var error = this.getError(index);
+        return !isEmpty(error);
+    };
     Validators.prototype.firstError = function (index) {
         if (index === undefined)
             throw 'smart validator: method $validator.firstError needs a param';

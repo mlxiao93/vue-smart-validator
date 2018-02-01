@@ -72,6 +72,11 @@ export default class Validators {
         return error;
     }
 
+    hasError(index?: string|{ group: string }) {
+        let error = this.getError(index);
+        return !isEmpty(error);
+    }
+
     firstError(index) {
         if (index === undefined) throw 'smart validator: method $validator.firstError needs a param';
         let error = this.getError(index);
