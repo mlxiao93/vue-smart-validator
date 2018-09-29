@@ -21,6 +21,7 @@ export class Validator {
     }> = [];
 
     context: any;
+    componentInstance: any;
     vnode: any;
 
     private setValidators({ rules, options }: { rules: rules, options: options}) {
@@ -37,7 +38,7 @@ export class Validator {
             _validator.push({
                 index,
                 key: typeof key === 'string' ? key : undefined,
-                check: (message => {
+                check: ((message: any) => {
                     return modelValue => {
                         if (!rule(modelValue, modifies)) {
                             if (typeof message === 'function') return message(modelValue, modifies);
@@ -128,11 +129,12 @@ export class Validator {
         return error[key];
     }
 
-    constructor({ rules, options, vModelKey, context, errorEl, targetEl, vnode }) {
+    constructor({ rules, options, vModelKey, context, errorEl, targetEl, vnode, componentInstance }) {
         this.targetEl = targetEl;
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
+        this.componentInstance = componentInstance;
         this.vnode = vnode;
         this.options = options;
         this.setValidators({ rules, options })

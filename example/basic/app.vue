@@ -18,10 +18,13 @@
 </style>
 <template>
     <div class="container">
-        <el-radio v-model="models[0]" :label="1">1</el-radio>
-        <el-radio v-model="models[0]" :label="2" v-validator="[{rule: 'required'}]">2</el-radio>
+        <el-select size="small" v-model="models[0]" v-validator="[{rule: 'required'}]">
+            <el-option label="前台" value="前台"></el-option>
+            <el-option label="预订部" value="预订部"></el-option>
+            <el-option label="联系人" value="联系人"></el-option>
+        </el-select>
         <br>
-        <el-input v-if="models[0] === 2" v-model="models[1]" v-validator="[{rule: 'required'}]"></el-input>
+        <el-input v-model="models[1]" v-validator="[{rule: 'required'}]"></el-input>
 
         <br>
 

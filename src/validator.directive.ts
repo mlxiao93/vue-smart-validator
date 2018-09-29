@@ -7,12 +7,13 @@ import {uuid} from './util/data'
 export default {
     bind(el, bindings, vnode) {
         let { value, modifiers } = bindings;
-        let {context, data} = vnode;
+        let {context, data, componentInstance} = vnode;
         let paramParser = new DirectiveParamParser({modifiers, value, data, el});
         let validator = new Validator({
             targetEl: el,
             errorEl: el,
             context,
+            componentInstance,
             vnode,
             rules: paramParser.rules,
             options: paramParser.options,

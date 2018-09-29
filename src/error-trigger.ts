@@ -25,7 +25,7 @@ export default class ErrorTrigger {
 
     register() {
         let validator = this.validator;
-        let context = validator.context;
+        let componentInstance = validator.componentInstance;
         let triggers = validator.getExistsTriggers();
         let targetEl = validator.targetEl;
 
@@ -36,17 +36,15 @@ export default class ErrorTrigger {
                 });
             });
         } else {
-            let vueInstance = context.$children[0];
             triggers.map(trigger => {
-                vueInstance.$on(trigger, () => {
-                    validator.check({trigger})
+                componentInstance.$on(trigger, (value) => {
+                    validator.check({trigger});
                 });
             });
             if (onlyOneEditableFormElChild(targetEl)) {
                 triggers.map(trigger => {
                     targetEl.querySelector('input, select, textarea').addEventListener(trigger, () => {
                         setTimeout(() => validator.check({trigger}));
-
                     });
                 });
             }

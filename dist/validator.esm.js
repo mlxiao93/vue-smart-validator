@@ -35,10 +35,10 @@ var DirectiveParamParser = /** @class */ (function () {
     DirectiveParamParser.prototype.setRules = function () {
         var directiveValue = this.directiveValue;
         var rules; // [{rule: 'required', message: ''}]
-        if (Array.isArray(directiveValue)) {
+        if (Array.isArray(directiveValue)) { // [{rule: 'required', message: ''}]
             rules = directiveValue;
         }
-        else if (Array.isArray(directiveValue.rules)) {
+        else if (Array.isArray(directiveValue.rules)) { // {rules: [{rule: 'required', message: ''}], group: ''}
             rules = directiveValue.rules;
         }
         else {
@@ -271,6 +271,13 @@ var Options = /** @class */ (function () {
             if (toString.call(defaultVal) === '[object Object]') {
                 options[key] = __assign({}, defaultVal, (globalVal || {}), (localVal || {}));
             }
+            // else if (toString.call(defaultVal) === '[object Array]') {
+            //     options[key] = [
+            //         ...defaultVal,
+            //         ...(globalVal || {}),
+            //         ...(localVal || {})
+            //     ];
+            // }
             else {
                 options[key] = defaultVal;
                 if (!isNullOrUndefined(localVal)) {
@@ -363,12 +370,13 @@ function removeErrorEl(target) {
 
 var Validator = /** @class */ (function () {
     function Validator(_a) {
-        var rules = _a.rules, options = _a.options, vModelKey = _a.vModelKey, context = _a.context, errorEl = _a.errorEl, targetEl = _a.targetEl, vnode = _a.vnode;
+        var rules = _a.rules, options = _a.options, vModelKey = _a.vModelKey, context = _a.context, errorEl = _a.errorEl, targetEl = _a.targetEl, vnode = _a.vnode, componentInstance = _a.componentInstance;
         this.validators = [];
         this.targetEl = targetEl;
         this.errorEl = errorEl;
         this.vModelKey = vModelKey;
         this.context = context;
+        this.componentInstance = componentInstance;
         this.vnode = vnode;
         this.options = options;
         this.setValidators({ rules: rules, options: options });
@@ -597,7 +605,7 @@ var ErrorTrigger = /** @class */ (function () {
     };
     ErrorTrigger.prototype.register = function () {
         var validator = this.validator;
-        var context = validator.context;
+        var componentInstance = validator.componentInstance;
         var triggers = validator.getExistsTriggers();
         var targetEl = validator.targetEl;
         if (isEditableFormEl(targetEl)) {
@@ -608,9 +616,8 @@ var ErrorTrigger = /** @class */ (function () {
             });
         }
         else {
-            var vueInstance_1 = context.$children[0];
             triggers.map(function (trigger) {
-                vueInstance_1.$on(trigger, function () {
+                componentInstance.$on(trigger, function (value) {
                     validator.check({ trigger: trigger });
                 });
             });
@@ -633,12 +640,13 @@ var ErrorTrigger = /** @class */ (function () {
 var validatorDirective = {
     bind: function (el, bindings, vnode) {
         var value = bindings.value, modifiers = bindings.modifiers;
-        var context = vnode.context, data = vnode.data;
+        var context = vnode.context, data = vnode.data, componentInstance = vnode.componentInstance;
         var paramParser = new DirectiveParamParser({ modifiers: modifiers, value: value, data: data, el: el });
         var validator = new Validator({
             targetEl: el,
             errorEl: el,
             context: context,
+            componentInstance: componentInstance,
             vnode: vnode,
             rules: paramParser.rules,
             options: paramParser.options,
